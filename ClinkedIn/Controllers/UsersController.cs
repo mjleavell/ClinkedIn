@@ -34,5 +34,13 @@ namespace ClinkedIn.Controllers
 
             return Created($"api/users/{newUser.Id}", newUser);
         }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<User>> GetUsers()
+        {
+            var users = _userRepository._users;
+
+            return Ok(users);
+        }
     }
 }
