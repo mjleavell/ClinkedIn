@@ -42,9 +42,9 @@ namespace ClinkedIn.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
-            var users = _userRepository._users;
-
-            return Ok(users);
+            
+            
+            return Ok(_userRepository.GetAllUsers());
         }
     }
 }
