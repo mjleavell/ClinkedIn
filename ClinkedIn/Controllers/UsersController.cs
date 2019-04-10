@@ -32,7 +32,7 @@ namespace ClinkedIn.Controllers
 
         // Get Single User
         [HttpGet("{id}")]
-        public ActionResult GetSingleUser(Guid id)
+        public ActionResult GetSingleUser(string id)
         {
             return Ok(_userRepository.GetSingleUser(id));
         }
@@ -53,17 +53,33 @@ namespace ClinkedIn.Controllers
 
         // Delete User
         [HttpDelete("{id}")]
-        public void DeleteUser(Guid id)
+        public void DeleteUser(string id)
         {
             _userRepository.DeleteUser(id);
         }
 
         // Update User
         //[HttpPut("{id}")]
-        //{
-
-        //}
 
 
+        // Add Friend to User
+        [HttpPut("users/{id}/newfriend/{friendId}")]
+        public ActionResult AddFriend(string userId, string friendId)
+        {
+            var friend = _userRepository.GetSingleUser(friendId);
+            var userFriends = _userRepository.GetSingleUser(userId).Friends;
+            //var updatedFriends = userFriends.Where(friend => friend.Id != friendId).
+            if (userFriends.Contains(friend))
+            {
+                return BadRequest(new { error = $"The user is already friends with {friend.Username}" });
+
+
+            }
+            else
+            {
+                userFriends.Add(friend);
+                return Ok();
+            }     
+        }
     }
 }
