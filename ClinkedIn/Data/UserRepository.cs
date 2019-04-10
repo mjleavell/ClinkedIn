@@ -8,7 +8,7 @@ namespace ClinkedIn.Data
 {
     public class UserRepository
     {
-        public List<User> _users = new List<User>
+        static List<User> _users = new List<User>
         {
             new User("WayneWorld","3425dsfsa"),
             new User("OtherAdam","asjdfasd"),
@@ -18,12 +18,13 @@ namespace ClinkedIn.Data
         public User AddUser(string username, string password)
         {
             var newUser = new User(username, password);
-
-            newUser.Id = _users.Count + 1;
-
             _users.Add(newUser);
-
             return newUser;
+        }
+
+        public List<User> GetAllUsers()
+        {
+            return _users;
         }
     }
 }
