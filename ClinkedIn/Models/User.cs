@@ -9,11 +9,13 @@ namespace ClinkedIn.Models
     {
         public User(string username, string password)
         {
+            Id = Guid.NewGuid();
             Username = username;
             Password = password;
+            ReleaseDate = DateTime.Now;
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public DateTime ReleaseDate { get; set; }

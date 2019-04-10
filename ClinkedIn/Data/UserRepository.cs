@@ -18,11 +18,7 @@ namespace ClinkedIn.Data
         public User AddUser(string username, string password)
         {
             var newUser = new User(username, password);
-
-            newUser.Id = _users.Count + 1;
-
             _users.Add(newUser);
-
             return newUser;
         }
 
@@ -30,7 +26,10 @@ namespace ClinkedIn.Data
         {
             return _users;
         }
+<<<<<<< HEAD
 
       
+=======
+>>>>>>> master
     }
 }

@@ -27,13 +27,13 @@ namespace ClinkedIn.Controllers
         }
 
         [HttpPost("register")]
+        //public ActionResult AddUser([FromBody]CreateUserRequest createRequest)
         public ActionResult AddUser(CreateUserRequest createRequest)
         {
             if (!_validator.Validate(createRequest))
             {
                 return BadRequest(new { error = "users must have a username and password" });
             }
-
             var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
 
             return Created($"api/users/{newUser.Id}", newUser);
@@ -42,8 +42,12 @@ namespace ClinkedIn.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
+<<<<<<< HEAD
             
             
+=======
+            //var users = _userRepository.GetAllUsers();
+>>>>>>> master
             return Ok(_userRepository.GetAllUsers());
         }
     }
