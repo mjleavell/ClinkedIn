@@ -7,12 +7,12 @@ namespace ClinkedIn.Models
 {
     public class User
     {
-        public User(string username, string password)
+        public User(string username, string password, DateTime releaseDate)
         {
             Id = Guid.NewGuid();
             Username = username;
             Password = password;
-            ReleaseDate = new DateTime(2100, 1, 31);
+            ReleaseDate = releaseDate;
             Friends = new List<User>();
         }
 

@@ -10,16 +10,16 @@ namespace ClinkedIn.Data
     {
         static List<User> _users = new List<User>
         {
-            new User("WayneWorld","3425dsfsa",){ReleaseDate = new DateTime(2020, 1, 31)},
-            new User("OtherAdam","asjdfasd"){ReleaseDate = new DateTime(2025, 5, 15)},
-            new User("Chase","runFasterYouCantCatchMe"){ReleaseDate = new DateTime(2023, 10, 31)},
-            new User("TedBundy","I@mTheW0rst"){ReleaseDate = new DateTime(2134, 2, 14)},
-            new User("GoldenState","99dj$2!&adfg"){ReleaseDate = new DateTime(2074, 6, 3)},
+            new User("WayneWorld","3425dsfsa", new DateTime(2020, 1, 31)),
+            new User("OtherAdam","asjdfasd", new DateTime(2025, 5, 15)),
+            new User("Chase","runFasterYouCantCatchMe", new DateTime(2023, 10, 31)),
+            new User("TedBundy","I@mTheW0rst", new DateTime(2134, 2, 14)),
+            new User("GoldenState","99dj$2!&adfg", new DateTime(2074, 6, 3)),
         };
 
-        public User AddUser(string username, string password)
+        public User AddUser(string username, string password, DateTime releaseDate)
         {
-            var newUser = new User(username, password);
+            var newUser = new User(username, password, releaseDate);
             _users.Add(newUser);
             return newUser;
         }
