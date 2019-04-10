@@ -57,11 +57,13 @@ namespace ClinkedIn.Controllers
         {
             _userRepository.DeleteUser(id);
         }
+
+        // Update User
+        //[HttpPut("{id}")]
+        //{
+
+        //}
+
+
     }
-
-    // Update User
-    //[HttpPut("{id}")]
-    //{
-
-    //}
 }

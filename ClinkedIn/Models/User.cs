@@ -12,16 +12,17 @@ namespace ClinkedIn.Models
             Id = Guid.NewGuid();
             Username = username;
             Password = password;
-            ReleaseDate = DateTime.Now;
+            ReleaseDate = new DateTime(2100, 1, 31);
+            Friends = new List<User>();
         }
 
         public Guid Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public List<Interest> Interests { get; set; }
+        //public List<Interest> Interests { get; set; }
         // Enemies
         // Serivices
-        // Friends
+        public List<User> Friends { get; set; }
     }
 }
