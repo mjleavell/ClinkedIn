@@ -32,7 +32,7 @@ namespace ClinkedIn.Controllers
 
         // Get Single User
         [HttpGet("{id}")]
-        public ActionResult GetSingleUser(Guid id)
+        public ActionResult GetSingleUser(string id)
         {
             return Ok(_userRepository.GetSingleUser(id));
         }
@@ -46,22 +46,40 @@ namespace ClinkedIn.Controllers
             {
                 return BadRequest(new { error = "users must have a username and password" });
             }
-            var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
+            var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.ReleaseDate);
 
             return Created($"api/users/{newUser.Id}", newUser);
         }
 
         // Delete User
         [HttpDelete("{id}")]
-        public void DeleteUser(Guid id)
+        public void DeleteUser(string id)
         {
             _userRepository.DeleteUser(id);
         }
+
+        // Update User
+        //[HttpPut("{id}")]
+
+
+        // Add Friend to User
+        [HttpPut("users/{id}/newfriend/{friendId}")]
+        public ActionResult AddFriend(string userId, string friendId)
+        {
+            var friend = _userRepository.GetSingleUser(friendId);
+            var userFriends = _userRepository.GetSingleUser(userId).Friends;
+            //var updatedFriends = userFriends.Where(friend => friend.Id != friendId).
+            if (userFriends.Contains(friend))
+            {
+                return BadRequest(new { error = $"The user is already friends with {friend.Username}" });
+
+
+            }
+            else
+            {
+                userFriends.Add(friend);
+                return Ok();
+            }     
+        }
     }
-
-    // Update User
-    //[HttpPut("{id}")]
-    //{
-
-    //}
 }
