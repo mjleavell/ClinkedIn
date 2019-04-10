@@ -20,6 +20,10 @@ namespace ClinkedIn.Controllers
         {
             _validator = new CreateUserRequestValidator();
             _userRepository = new UserRepository();
+            //Freind Repo
+            //Enemy Repo
+            //Service Repo
+            
         }
 
         [HttpPost("register")]
@@ -33,6 +37,13 @@ namespace ClinkedIn.Controllers
             var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
 
             return Created($"api/users/{newUser.Id}", newUser);
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<User>> GetUsers()
+        {
+            var users = _userRepository._users;
+            return Ok(users);
         }
     }
 }
