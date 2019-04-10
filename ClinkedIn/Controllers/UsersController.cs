@@ -22,6 +22,22 @@ namespace ClinkedIn.Controllers
             _userRepository = new UserRepository();
         }
 
+        // Get All Users
+        [HttpGet]
+        public ActionResult<IEnumerable<User>> GetUsers()
+        {
+            //var users = _userRepository.GetAllUsers();
+            return Ok(_userRepository.GetAllUsers());
+        }
+
+        // Get Single User
+        [HttpGet("{id}")]
+        public ActionResult GetSingleUser(Guid id)
+        {
+            return Ok(_userRepository.GetSingleUser(id));
+        }
+
+        // Add User
         [HttpPost("register")]
         //public ActionResult AddUser([FromBody]CreateUserRequest createRequest)
         public ActionResult AddUser(CreateUserRequest createRequest)
@@ -35,11 +51,16 @@ namespace ClinkedIn.Controllers
             return Created($"api/users/{newUser.Id}", newUser);
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers()
-        {
-            //var users = _userRepository.GetAllUsers();
-            return Ok(_userRepository.GetAllUsers());
-        }
+        // Delete User
+        //[HttpDelete("{id}")]
+        //{
+
+        //}
+
+        // Update User
+        //[HttpPut("{id}")]
+        //{
+
+        //}
     }
 }

@@ -26,5 +26,11 @@ namespace ClinkedIn.Data
         {
             return _users;
         }
+
+        public User GetSingleUser(Guid userId)
+        {
+            var singleUser = _users.FirstOrDefault(user => user.Id == userId);
+            return singleUser;
+        }
     }
 }
