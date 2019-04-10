@@ -43,6 +43,7 @@ namespace ClinkedIn.Controllers
         public ActionResult<IEnumerable<User>> GetUsers()
         {
             var users = _userRepository._users;
+
             return Ok(users);
         }
     }
