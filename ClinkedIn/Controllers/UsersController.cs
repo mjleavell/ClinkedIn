@@ -52,15 +52,16 @@ namespace ClinkedIn.Controllers
         }
 
         // Delete User
-        //[HttpDelete("{id}")]
-        //{
-
-        //}
-
-        // Update User
-        //[HttpPut("{id}")]
-        //{
-
-        //}
+        [HttpDelete("{id}")]
+        public void DeleteUser(Guid id)
+        {
+            _userRepository.DeleteUser(id);
+        }
     }
+
+    // Update User
+    //[HttpPut("{id}")]
+    //{
+
+    //}
 }

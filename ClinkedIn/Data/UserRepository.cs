@@ -32,5 +32,11 @@ namespace ClinkedIn.Data
             var singleUser = _users.FirstOrDefault(user => user.Id == userId);
             return singleUser;
         }
+
+        public void DeleteUser(Guid userId)
+        {
+            var user = _users.FirstOrDefault(singleUser => singleUser.Id == userId);
+            _users.Remove(user);
+        }
     }
 }
