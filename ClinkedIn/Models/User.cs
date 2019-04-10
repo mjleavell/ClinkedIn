@@ -19,7 +19,7 @@ namespace ClinkedIn.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public string Interests { get; set; }
+        public List<Interest> Interests { get; set; }
         // Enemies
         // Serivices
         // Friends
