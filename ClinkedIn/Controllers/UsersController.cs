@@ -61,9 +61,9 @@ namespace ClinkedIn.Controllers
         // Update User
         //[HttpPut("{id}")]
 
-
+        // -------------------------------- Friends --------------------------------
         // Add Friend to User
-        [HttpPut("{userId}/addfriend/{friendId}")]
+        [HttpPut("{userId}/addFriend/{friendId}")]
         public ActionResult AddFriend(string userId, string friendId)
         {
             var users = _userRepository.GetAllUsers();
@@ -77,12 +77,32 @@ namespace ClinkedIn.Controllers
             }
             else if (user.Id == friendId)
             {
-                return BadRequest(new { error = $"Sorry but you can't be friends with yourself" });
+                return BadRequest(new { error = "Sorry but you can't be friends with yourself" });
             }
             else
             {
                 return BadRequest(new { error = $"The user is already friends with {friendToAdd.Username}" });
             }
         }
+
+        // Remove Friend from User
+        [HttpPut("{userId}/removeFriend/{friendId}")]
+        public ActionResult RemoveFriend(string userId, string friendId)
+        {
+            var users = _userRepository.GetAllUsers();
+            var user = users.FirstOrDefault(u => u.Id == userId);
+            var friendToRemove = users.FirstOrDefault(f => f.Id == friendId);
+
+            if (user.Friends.Contains(friendToRemove))
+            {
+                user.Friends.Remove(friendToRemove);
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest(new { error = $"I'm sorry {user.Username}, but you don't have any friends. You should be nicer to people." });
+            }
+        }
+
     }
 }
