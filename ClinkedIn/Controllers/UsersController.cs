@@ -70,10 +70,14 @@ namespace ClinkedIn.Controllers
             var user = users.FirstOrDefault(u => u.Id == userId);
             var friendToAdd = users.FirstOrDefault(f => f.Id == friendId);
 
-            if (!user.Friends.Contains(friendToAdd))
+            if (!user.Friends.Contains(friendToAdd) && user.Id != friendId)
             {
                 user.Friends.Add(friendToAdd);
                 return Ok(user);
+            }
+            else if (user.Id == friendId)
+            {
+                return BadRequest(new { error = $"Sorry but you can't be friends with yourself" });
             }
             else
             {
