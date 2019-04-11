@@ -51,6 +51,26 @@ namespace ClinkedIn.Controllers
             return Created($"api/users/{newUser.Id}", newUser);
         }
 
+        // Add Enemy to User //
+        [HttpPut("addEnemy/{userId}/{enemyId}")]
+        public ActionResult AddEnemy(string userId, string enemyId)
+        {
+            var users = _userRepository.GetAllUsers();
+            var user = users.First(u => u.Id == userId);
+            var enemyToAdd = users.First(f => f.Id == enemyId);
+
+            user.Enemies.Add(enemyToAdd);
+            return Ok(user);
+        }
+
+        // Get enemy of User //
+        [HttpGet("enemies/{userId}")]
+        public ActionResult GetEnemies(string userId)
+        {
+            var inmateEnemies = _userRepository.GetSingleUser(userId);
+            return Ok(inmateEnemies.Enemies);
+        }
+
         // Delete User
         [HttpDelete("{id}")]
         public void DeleteUser(string id)
