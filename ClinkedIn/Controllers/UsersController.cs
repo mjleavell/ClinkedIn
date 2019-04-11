@@ -63,23 +63,37 @@ namespace ClinkedIn.Controllers
 
 
         // Add Friend to User
-        [HttpPut("users/{id}/newfriend/{friendId}")]
+        [HttpPut("addfriend/{userId}/{friendId}")]
         public ActionResult AddFriend(string userId, string friendId)
         {
-            var friend = _userRepository.GetSingleUser(friendId);
-            var userFriends = _userRepository.GetSingleUser(userId).Friends;
-            //var updatedFriends = userFriends.Where(friend => friend.Id != friendId).
-            if (userFriends.Contains(friend))
-            {
-                return BadRequest(new { error = $"The user is already friends with {friend.Username}" });
+            var users = _userRepository.GetAllUsers();
+            var user = users.First(u => u.Id == userId);
+            var friendToAdd = users.First(f => f.Id == friendId);
+
+            user.Friends.Add(friendToAdd);
+            return Ok();
+            //return Created($"api/users/{userId}", user);
+            //var friend = _userRepository.GetSingleUser(friendId);
+
+            //user.Friends.Add(friend);
+            //return Ok();
+            // Is the friend already 
+            //var userFriendsToUpdate = userFriends.Where(f => f.Id == friendId).FirstOrDefault();
+            //userFriends.Add(friend);
+            //return Ok(userFriends);
 
 
-            }
-            else
-            {
-                userFriends.Add(friend);
-                return Ok();
-            }     
+            //if (userFriends.Contains(friend))
+            //{
+            //    return BadRequest(new { error = $"The user is already friends with {friend.Username}" });
+            //}
+            //else
+            //{
+            //    userFriends.Add(friend);
+            //    return Ok();
+            //}
+            //userFriends.Add(friend);
+            //return Ok();
         }
     }
 }
