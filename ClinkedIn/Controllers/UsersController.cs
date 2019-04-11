@@ -22,6 +22,7 @@ namespace ClinkedIn.Controllers
             _userRepository = new UserRepository();
         }
 
+        // -------------------------------- Users --------------------------------
         // Get All Users
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetUsers()
@@ -49,26 +50,6 @@ namespace ClinkedIn.Controllers
             var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.ReleaseDate);
 
             return Created($"api/users/{newUser.Id}", newUser);
-        }
-
-        // Add Enemy to User //
-        [HttpPut("addEnemy/{userId}/{enemyId}")]
-        public ActionResult AddEnemy(string userId, string enemyId)
-        {
-            var users = _userRepository.GetAllUsers();
-            var user = users.First(u => u.Id == userId);
-            var enemyToAdd = users.First(f => f.Id == enemyId);
-
-            user.Enemies.Add(enemyToAdd);
-            return Ok(user);
-        }
-
-        // Get enemy of User //
-        [HttpGet("enemies/{userId}")]
-        public ActionResult GetEnemies(string userId)
-        {
-            var inmateEnemies = _userRepository.GetSingleUser(userId);
-            return Ok(inmateEnemies.Enemies);
         }
 
         // Delete User
@@ -115,13 +96,34 @@ namespace ClinkedIn.Controllers
 
             if (user.Friends.Contains(friendToRemove))
             {
-                user.Friends.Remove(friendToRemove);
+                user.Friends.Remove(friendToRemove); 
                 return Ok(user);
             }
             else
             {
                 return BadRequest(new { error = $"I'm sorry {user.Username}, but you don't have any friends. You should be nicer to people." });
             }
+        }
+
+        // -------------------------------- Enemies --------------------------------
+        // Add Enemy to User //
+        [HttpPut("addEnemy/{userId}/{enemyId}")]
+        public ActionResult AddEnemy(string userId, string enemyId)
+        {
+            var users = _userRepository.GetAllUsers();
+            var user = users.First(u => u.Id == userId);
+            var enemyToAdd = users.First(f => f.Id == enemyId);
+
+            user.Enemies.Add(enemyToAdd);
+            return Ok(user);
+        }
+
+        // Get enemy of User //
+        [HttpGet("enemies/{userId}")]
+        public ActionResult GetEnemies(string userId)
+        {
+            var inmateEnemies = _userRepository.GetSingleUser(userId);
+            return Ok(inmateEnemies.Enemies);
         }
 
     }
