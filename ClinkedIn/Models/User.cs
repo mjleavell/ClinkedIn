@@ -14,6 +14,7 @@ namespace ClinkedIn.Models
             Password = password;
             ReleaseDate = releaseDate;
             Friends = new List<User>();
+            Enemies = new List<User>();
         }
 
         public string Id { get; set; }
@@ -24,5 +25,6 @@ namespace ClinkedIn.Models
         // Enemies
         // Serivices
         public List<User> Friends { get; set; }
+        public List<User> Enemies { get; set; }
     }
 }
