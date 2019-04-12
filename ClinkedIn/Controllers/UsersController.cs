@@ -105,6 +105,14 @@ namespace ClinkedIn.Controllers
             }
         }
 
+        // GET User's Friends of Friends
+        [HttpGet("{userId}/friends")]
+        public ActionResult GetFriendsOfFriends(string userId)
+        {
+            var friendsOfFriends = _userRepository.GetSingleUser(userId).Friends;
+            return Ok(friendsOfFriends);
+        }
+
         // -------------------------------- Enemies --------------------------------
         // Add Enemy to User //
         [HttpPut("addEnemy/{userId}/{enemyId}")]
