@@ -9,5 +9,6 @@ namespace ClinkedIn.Models
     {
         public string Username { get; set; }
         public string Password { get; set; }
+        public DateTime ReleaseDate { get; set; }
     }
 }
