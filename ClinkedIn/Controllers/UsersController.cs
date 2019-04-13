@@ -15,9 +15,9 @@ namespace ClinkedIn.Controllers
     {
         readonly UserRepository _userRepository;
         readonly CreateUserRequestValidator _validator;
-        //readonly InterestRepository _interestRepository;
-        //readonly User _user;
-        //readonly Interests interest;
+        readonly InterestRepository _interestRepository;
+        readonly User _user;
+        readonly Interests interest;
 
         public UsersController()
         {
@@ -136,6 +136,10 @@ namespace ClinkedIn.Controllers
         [HttpPut("{id}/interest/add")]
         public ActionResult AddInterest(string id, string interest)
         {
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
             var userIntrestList = _userRepository.GetSingleUser(id).Interests;
 
             userIntrestList.Add(interest);
@@ -145,24 +149,53 @@ namespace ClinkedIn.Controllers
         // -------------------------------- Enemies --------------------------------
 
         // Add Enemy to User //
-        [HttpPut("addEnemy/{userId}/{enemyId}")]
+        [HttpPut("{userId}/addEnemy/{enemyId}")]
         public ActionResult AddEnemy(string userId, string enemyId)
         {
             var users = _userRepository.GetAllUsers();
             var user = users.First(u => u.Id == userId);
             var enemyToAdd = users.First(f => f.Id == enemyId);
 
-            user.Enemies.Add(enemyToAdd);
-            return Ok(user);
+            if (!user.Enemies.Contains(enemyToAdd) && user.Id != enemyId)
+            {
+                user.Enemies.Add(enemyToAdd);
+                return Ok(user);
+            }
+            else if (userId == enemyId)
+            {
+                return BadRequest("Are you enemies with yourself?");
+            }
+            else
+            {
+                return BadRequest($"You are already enemies with {enemyToAdd.Username}");
+            }
         }
 
         // Get enemy of User //
-        [HttpGet("enemies/{userId}")]
+        [HttpGet("{userId}/enemies")]
         public ActionResult GetEnemies(string userId)
         {
             var inmateEnemies = _userRepository.GetSingleUser(userId);
             return Ok(inmateEnemies.Enemies);
         }
 
+        // Remove enemy //
+        [HttpPut("{userId}/removeEnemy/{enemyId}")]
+        public ActionResult RemoveEnemy(string userId, string enemyId)
+        {
+            var users = _userRepository.GetAllUsers();
+            var user = users.First(u => u.Id == userId);
+            var enemyToRemove = users.First(f => f.Id == enemyId);
+
+            if (user.Enemies.Contains(enemyToRemove))
+            {
+                user.Enemies.Remove(enemyToRemove);
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest("Congratulations! You don't have any enemies...or so you think...so watch your back...");
+            }
+        }
     }
 }
