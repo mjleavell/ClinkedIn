@@ -20,11 +20,7 @@ namespace ClinkedIn.Controllers
         {
             _validator = new CreateUserRequestValidator();
             _userRepository = new UserRepository();
-            //Freind Repo
-            //Enemy Repo
-            //Service Repo
         }
-
 
         // -------------------------------- Users --------------------------------
 
@@ -42,7 +38,6 @@ namespace ClinkedIn.Controllers
         {
             return Ok(_userRepository.GetSingleUser(id));
         }
-
 
         // Add User
         [HttpPost("register")]
@@ -113,16 +108,24 @@ namespace ClinkedIn.Controllers
         [HttpGet("{userId}/friends")]
         public ActionResult GetFriendsOfFriends(string userId)
         {
-            var friends = _userRepository.GetSingleUser(userId).Friends;
-            var friendOfUser = friends
-                .Where(friend => friend.Friends.Count > 0)
-                .Select(friend => friend.Username);
-            //foreach (var friend in friendOfUser)
-            //{
-            //    friendOfUser.Select(friend => friend.)
-            //}
+            var user = _userRepository.GetSingleUser(userId);
+            if (user == null) return NotFound();
 
-            return Ok(friendOfUser);
+            var friendsOfUser = user.Friends
+                .SelectMany(friend => friend.Friends).ToList();
+                //.Where(f => f != user && !user.Friends.Contains(f)).ToHashSet();
+
+            //if (friendOfUser. = 0)
+            //{
+            //    return BadRequest(new { error = $"You have no friends...." });
+            //}
+            //else
+            //foreach (var friend in user.Friends)
+            //{
+            //    use.Select(friend => friend.Username)
+            //}
+            var friends = friendsOfUser.Select(friend => friend.Username);
+            return Ok(friends);
         }
 
         // -------------------------------- Interests --------------------------------
