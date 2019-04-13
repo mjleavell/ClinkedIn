@@ -218,7 +218,7 @@ namespace ClinkedIn.Controllers
             var inmate = _userRepository.GetSingleUser(userId);
             var daysTilRelease = inmate.ReleaseDate.Subtract(DateTime.Today).Days;
 
-            return Ok(daysTilRelease);
+            return Ok($"{inmate.Username} has {daysTilRelease} days till they are released");
         }
     }
 }
