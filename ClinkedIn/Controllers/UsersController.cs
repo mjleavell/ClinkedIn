@@ -117,11 +117,15 @@ namespace ClinkedIn.Controllers
         public ActionResult GetFriendsOfFriends(string userId)
         {
             var friends = _userRepository.GetSingleUser(userId).Friends;
-            var frienOfUser = friends
-                .Select(friend => friend.Friends);
-           
+            var friendOfUser = friends
+                .Where(friend => friend.Friends.Count > 0)
+                .Select(friend => friend.Username);
+            //foreach (var friend in friendOfUser)
+            //{
+            //    friendOfUser.Select(friend => friend.)
+            //}
 
-            return Ok(friendsOfFriends);
+            return Ok(friendOfUser);
         }
 
         // -------------------------------- Interests --------------------------------
@@ -136,10 +140,6 @@ namespace ClinkedIn.Controllers
         [HttpPut("{id}/interest/add")]
         public ActionResult AddInterest(string id, string interest)
         {
-<<<<<<< HEAD
-=======
-
->>>>>>> master
             var userIntrestList = _userRepository.GetSingleUser(id).Interests;
 
             userIntrestList.Add(interest);
@@ -172,7 +172,7 @@ namespace ClinkedIn.Controllers
         }
 
         // Get enemy of User //
-        [HttpGet("{userId}/enemies")]
+        [HttpGet("{userI    d}/enemies")]
         public ActionResult GetEnemies(string userId)
         {
             var inmateEnemies = _userRepository.GetSingleUser(userId);
