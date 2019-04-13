@@ -29,6 +29,8 @@ namespace ClinkedIn.Controllers
         }
 
 
+        // -------------------------------- Users --------------------------------
+
         // Get All Users
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetUsers()
@@ -59,6 +61,82 @@ namespace ClinkedIn.Controllers
             return Created($"api/users/{newUser.Id}", newUser);
         }
 
+        // Delete User
+        [HttpDelete("{id}")]
+        public void DeleteUser(string id)
+        {
+            _userRepository.DeleteUser(id);
+        }
+
+        // Update User
+        //[HttpPut("{id}")]
+
+        // -------------------------------- Friends --------------------------------
+        // Add Friend to User
+        [HttpPut("{userId}/addFriend/{friendId}")]
+        public ActionResult AddFriend(string userId, string friendId)
+        {
+            var users = _userRepository.GetAllUsers();
+            var user = users.FirstOrDefault(u => u.Id == userId);
+            var friendToAdd = users.FirstOrDefault(f => f.Id == friendId);
+
+            if (!user.Friends.Contains(friendToAdd) && user.Id != friendId)
+            {
+                user.Friends.Add(friendToAdd);
+                return Ok(user);
+            }
+            else if (user.Id == friendId)
+            {
+                return BadRequest(new { error = "Sorry but you can't be friends with yourself" });
+            }
+            else
+            {
+                return BadRequest(new { error = $"The user is already friends with {friendToAdd.Username}" });
+            }
+        }
+
+        // Remove Friend from User
+        [HttpPut("{userId}/removeFriend/{friendId}")]
+        public ActionResult RemoveFriend(string userId, string friendId)
+        {
+            var users = _userRepository.GetAllUsers();
+            var user = users.FirstOrDefault(u => u.Id == userId);
+            var friendToRemove = users.FirstOrDefault(f => f.Id == friendId);
+
+            if (user.Friends.Contains(friendToRemove))
+            {
+                user.Friends.Remove(friendToRemove);
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest(new { error = $"I'm sorry {user.Username}, but you don't have any friends. You should be nicer to people." });
+            }
+        }
+
+
+
+        [HttpGet("{id}/interest")]
+        public ActionResult ListInterest(string id)
+        {
+            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
+            return Ok(userIntrestList);
+        }
+
+
+        [HttpPut("{id}/interest/add")]
+        public ActionResult AddInterest(string id, string interest)
+        {
+    
+            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
+
+            userIntrestList.Add(interest);
+            return Ok();
+            //return Created($"users/{_user.Id}", interest);
+
+        }
+
+        // -------------------------------- Enemies --------------------------------
         // Add Enemy to User //
         [HttpPut("addEnemy/{userId}/{enemyId}")]
         public ActionResult AddEnemy(string userId, string enemyId)
@@ -79,57 +157,5 @@ namespace ClinkedIn.Controllers
             return Ok(inmateEnemies.Enemies);
         }
 
-        // Delete User
-        [HttpDelete("{id}")]
-        public void DeleteUser(string id)
-        {
-            _userRepository.DeleteUser(id);
-        }
-
-        // Update User
-        //[HttpPut("{id}")]
-
-
-        // Add Friend to User
-        [HttpPut("users/{id}/newfriend/{friendId}")]
-        public ActionResult AddFriend(string userId, string friendId)
-        {
-            var friend = _userRepository.GetSingleUser(friendId);
-            var userFriends = _userRepository.GetSingleUser(userId).Friends;
-            //var updatedFriends = userFriends.Where(friend => friend.Id != friendId).
-            if (userFriends.Contains(friend))
-            {
-                return BadRequest(new { error = $"The user is already friends with {friend.Username}" });
-
-
-            }
-            else
-            {
-                userFriends.Add(friend);
-                return Ok();
-            }     
-
-        }
-
-      
-
-        [HttpGet("{id}/interest")]
-        public ActionResult ListInterest(string id)
-        {
-            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
-            return Ok(userIntrestList);
-        }
-
-
-        [HttpPut("{id}/interest/add")]
-        public ActionResult AddInterest(string id, string interest)
-        {
-    
-            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
-
-            userIntrestList.Add(interest);
-            return Ok();
-            //return Created($"users/{_user.Id}", interest);
-        }
     }
 }
