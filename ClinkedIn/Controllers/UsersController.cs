@@ -15,7 +15,6 @@ namespace ClinkedIn.Controllers
     {
         readonly UserRepository _userRepository;
         readonly CreateUserRequestValidator _validator;
-        readonly InterestRepository _interestRepository;
         readonly User _user;
         readonly Interests interest;
 
@@ -23,11 +22,7 @@ namespace ClinkedIn.Controllers
         {
             _validator = new CreateUserRequestValidator();
             _userRepository = new UserRepository();
-            //Freind Repo
-            //Enemy Repo
-            //Service Repo
         }
-
 
         // -------------------------------- Users --------------------------------
 
@@ -111,8 +106,6 @@ namespace ClinkedIn.Controllers
             }
         }
 
-
-
         [HttpGet("{id}/interest")]
         public ActionResult ListInterest(string id)
         {
@@ -120,14 +113,22 @@ namespace ClinkedIn.Controllers
             return Ok(userIntrestList);
         }
 
-
         [HttpPut("{id}/interest/add")]
         public ActionResult AddInterest(string id, string interest)
         {
 
             var userIntrestList = _userRepository.GetSingleUser(id).Interests;
+            if (userIntrestList.Contains(interest))
+            {
+                return BadRequest(new { error = $"I'm sorry but {interest} is alreday in your list" });
 
-            userIntrestList.Add(interest);
+            }
+            else {
+                userIntrestList.Add(interest);
+
+            }
+
+          
             return Ok();
 
         }
@@ -140,7 +141,6 @@ namespace ClinkedIn.Controllers
 
             userIntrestList.Remove(interest);
             return Ok();
-
         }
 
         // -------------------------------- Enemies --------------------------------
