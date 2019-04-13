@@ -21,12 +21,8 @@ namespace ClinkedIn.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public DateTime ReleaseDate { get; set; }
-
-        //public List<string> Interests { get; set; } = new List<string>();
         public List<string> Interests { get; set; } = new List<string> { "taxEvasion" };
-        // Enemies
-        // Serivices
-        // Friends
+        public List<string> Services { get; set; } = new List<string> { "BraidingHair" };
         public List<User> Friends { get; set; }
         public List<User> Enemies { get; set; }
     };
