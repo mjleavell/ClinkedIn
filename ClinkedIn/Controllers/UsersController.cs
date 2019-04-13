@@ -68,9 +68,6 @@ namespace ClinkedIn.Controllers
             _userRepository.DeleteUser(id);
         }
 
-        // Update User
-        //[HttpPut("{id}")]
-
         // -------------------------------- Friends --------------------------------
 
         // Add Friend to User
@@ -119,7 +116,11 @@ namespace ClinkedIn.Controllers
         [HttpGet("{userId}/friends")]
         public ActionResult GetFriendsOfFriends(string userId)
         {
-            var friendsOfFriends = _userRepository.GetSingleUser(userId).Friends;
+            var friends = _userRepository.GetSingleUser(userId).Friends;
+            var frienOfUser = friends
+                .Select(friend => friend.Friends);
+           
+
             return Ok(friendsOfFriends);
         }
 
