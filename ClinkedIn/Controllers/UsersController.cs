@@ -15,14 +15,22 @@ namespace ClinkedIn.Controllers
     {
         readonly UserRepository _userRepository;
         readonly CreateUserRequestValidator _validator;
+        //readonly InterestRepository _interestRepository;
+        //readonly User _user;
+        //readonly Interests interest;
 
         public UsersController()
         {
             _validator = new CreateUserRequestValidator();
             _userRepository = new UserRepository();
+            //Freind Repo
+            //Enemy Repo
+            //Service Repo
         }
 
+
         // -------------------------------- Users --------------------------------
+
         // Get All Users
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetUsers()
@@ -37,6 +45,7 @@ namespace ClinkedIn.Controllers
         {
             return Ok(_userRepository.GetSingleUser(id));
         }
+
 
         // Add User
         [HttpPost("register")]
@@ -63,6 +72,7 @@ namespace ClinkedIn.Controllers
         //[HttpPut("{id}")]
 
         // -------------------------------- Friends --------------------------------
+
         // Add Friend to User
         [HttpPut("{userId}/addFriend/{friendId}")]
         public ActionResult AddFriend(string userId, string friendId)
@@ -96,7 +106,7 @@ namespace ClinkedIn.Controllers
 
             if (user.Friends.Contains(friendToRemove))
             {
-                user.Friends.Remove(friendToRemove); 
+                user.Friends.Remove(friendToRemove);
                 return Ok(user);
             }
             else
@@ -113,7 +123,26 @@ namespace ClinkedIn.Controllers
             return Ok(friendsOfFriends);
         }
 
+        // -------------------------------- Interests --------------------------------
+
+        [HttpGet("{id}/interest")]
+        public ActionResult ListInterest(string id)
+        {
+            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
+            return Ok(userIntrestList);
+        }
+
+        [HttpPut("{id}/interest/add")]
+        public ActionResult AddInterest(string id, string interest)
+        {
+            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
+
+            userIntrestList.Add(interest);
+            return Ok();
+        }
+
         // -------------------------------- Enemies --------------------------------
+
         // Add Enemy to User //
         [HttpPut("addEnemy/{userId}/{enemyId}")]
         public ActionResult AddEnemy(string userId, string enemyId)

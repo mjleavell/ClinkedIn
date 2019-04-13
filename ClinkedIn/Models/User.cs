@@ -21,10 +21,10 @@ namespace ClinkedIn.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public DateTime ReleaseDate { get; set; }
-        //public List<Interest> Interests { get; set; }
-        // Enemies
+        public List<string> Interests { get; set; } = new List<string> { "taxEvasion" };
         // Serivices
         public List<User> Friends { get; set; }
         public List<User> Enemies { get; set; }
-    }
+    };
+
 }
