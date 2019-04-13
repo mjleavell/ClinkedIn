@@ -23,7 +23,7 @@ namespace ClinkedIn.Models
         public DateTime ReleaseDate { get; set; }
 
         //public List<string> Interests { get; set; } = new List<string>();
-        public List<string> Interests { get; set; } = new List<string> { "taxEvasion" };
+        public List<string> Interests { get; set; } = new List<string> { };
         // Enemies
         // Serivices
         // Friends

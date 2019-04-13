@@ -68,9 +68,6 @@ namespace ClinkedIn.Controllers
             _userRepository.DeleteUser(id);
         }
 
-        // Update User
-        //[HttpPut("{id}")]
-
         // -------------------------------- Friends --------------------------------
         // Add Friend to User
         [HttpPut("{userId}/addFriend/{friendId}")]
@@ -132,7 +129,17 @@ namespace ClinkedIn.Controllers
 
             userIntrestList.Add(interest);
             return Ok();
-            //return Created($"users/{_user.Id}", interest);
+
+        }
+
+        [HttpPut("{id}/interest/remove")]
+        public ActionResult RemoveInterest(string id, string interest)
+        {
+
+            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
+
+            userIntrestList.Remove(interest);
+            return Ok();
 
         }
 
