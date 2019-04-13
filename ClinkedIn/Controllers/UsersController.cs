@@ -15,7 +15,6 @@ namespace ClinkedIn.Controllers
     {
         readonly UserRepository _userRepository;
         readonly CreateUserRequestValidator _validator;
-        readonly InterestRepository _interestRepository;
         readonly User _user;
         readonly Interests interest;
 
@@ -23,9 +22,6 @@ namespace ClinkedIn.Controllers
         {
             _validator = new CreateUserRequestValidator();
             _userRepository = new UserRepository();
-            //Freind Repo
-            //Enemy Repo
-            //Service Repo
         }
 
 
@@ -68,8 +64,6 @@ namespace ClinkedIn.Controllers
             _userRepository.DeleteUser(id);
         }
 
-        // Update User
-        //[HttpPut("{id}")]
 
         // -------------------------------- Friends --------------------------------
         // Add Friend to User
@@ -213,7 +207,17 @@ namespace ClinkedIn.Controllers
             {
                 return BadRequest("Congratulations! You don't have any enemies...or so you think...so watch your back...");
             }
+        }
 
+        //------------------------ Release Date Calculation ----------------------
+        
+        [HttpGet("{userId}/release")]
+        public ActionResult GetDaysTilRelease(string userId)
+        {
+            var inmate = _userRepository.GetSingleUser(userId);
+            var daysTilRelease = inmate.ReleaseDate.Subtract(DateTime.Today).Days;
+
+            return Ok($"{inmate.Username} has {daysTilRelease} days till they are released");
         }
     }
 }
