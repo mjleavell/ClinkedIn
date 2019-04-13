@@ -35,9 +35,11 @@ namespace ClinkedIn.Data
             return singleUser;
         }
 
-        internal object AddUser(string username, string password, object releaseDate)
+        public void DeleteUser(string userId)
         {
-            throw new NotImplementedException();
+            var user = _users.FirstOrDefault(singleUser => singleUser.Id == userId);
+            _users.Remove(user);
+
         }
     }
 }
