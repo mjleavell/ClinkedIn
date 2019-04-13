@@ -15,9 +15,6 @@ namespace ClinkedIn.Controllers
     {
         readonly UserRepository _userRepository;
         readonly CreateUserRequestValidator _validator;
-        readonly InterestRepository _interestRepository;
-        readonly User _user;
-        readonly Interests interest;
 
         public UsersController()
         {
@@ -144,6 +141,33 @@ namespace ClinkedIn.Controllers
 
             userIntrestList.Add(interest);
             return Ok();
+        }
+
+        // -------------------------------- Services --------------------------------
+
+        [HttpGet("{id}/service")]
+        public ActionResult ListService(string id)
+        {
+            var userServiceList = _userRepository.GetSingleUser(id).Services;
+            return Ok(userServiceList);
+        }
+
+
+        [HttpPut("{id}/service/add")]
+        public ActionResult AddService(string id, string service)
+        {
+
+            var userServiceList = _userRepository.GetSingleUser(id).Services;
+
+            if(!userServiceList.Contains(service))
+            {
+                userServiceList.Add(service);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("You can't add the same service twice...");
+            }
         }
 
         // -------------------------------- Enemies --------------------------------
