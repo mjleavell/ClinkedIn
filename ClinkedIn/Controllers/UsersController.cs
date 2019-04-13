@@ -109,22 +109,12 @@ namespace ClinkedIn.Controllers
         public ActionResult GetFriendsOfFriends(string userId)
         {
             var user = _userRepository.GetSingleUser(userId);
-            if (user == null) return NotFound();
+            if (user.Friends.Count == 0) return BadRequest(new { error = $"{user.Username} doesnt have any friends" });
 
             var friendsOfUser = user.Friends
-                .SelectMany(friend => friend.Friends).ToList();
-                //.Where(f => f != user && !user.Friends.Contains(f)).ToHashSet();
-
-            //if (friendOfUser. = 0)
-            //{
-            //    return BadRequest(new { error = $"You have no friends...." });
-            //}
-            //else
-            //foreach (var friend in user.Friends)
-            //{
-            //    use.Select(friend => friend.Username)
-            //}
-            var friends = friendsOfUser.Select(friend => friend.Username);
+                .SelectMany(friend => friend.Friends)
+                .Where(f => f != user).ToList();
+            var friends = friendsOfUser.Select(friend => friend.Username).Distinct();
             return Ok(friends);
         }
 
