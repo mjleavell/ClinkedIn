@@ -114,6 +114,7 @@ namespace ClinkedIn.Controllers
             }
         }
 
+        // -------------------------------- Interests --------------------------------
 
 
         [HttpGet("{id}/interest")]
@@ -134,6 +135,33 @@ namespace ClinkedIn.Controllers
             return Ok();
             //return Created($"users/{_user.Id}", interest);
 
+        }
+
+        // -------------------------------- Services --------------------------------
+
+        [HttpGet("{id}/service")]
+        public ActionResult ListService(string id)
+        {
+            var userServiceList = _userRepository.GetSingleUser(id).Services;
+            return Ok(userServiceList);
+        }
+
+
+        [HttpPut("{id}/service/add")]
+        public ActionResult AddService(string id, string service)
+        {
+
+            var userServiceList = _userRepository.GetSingleUser(id).Services;
+
+            if(!userServiceList.Contains(service))
+            {
+                userServiceList.Add(service);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("You can't add the same service twice...");
+            }
         }
 
         // -------------------------------- Enemies --------------------------------
