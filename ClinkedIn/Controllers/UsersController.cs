@@ -41,7 +41,6 @@ namespace ClinkedIn.Controllers
             return Ok(_userRepository.GetSingleUser(id));
         }
 
-
         // Add User
         [HttpPost("register")]
         //public ActionResult AddUser([FromBody]CreateUserRequest createRequest)
@@ -121,22 +120,17 @@ namespace ClinkedIn.Controllers
             if (userIntrestList.Contains(interest))
             {
                 return BadRequest(new { error = $"I'm sorry but {interest} is alreday in your list" });
-
             }
             else {
                 userIntrestList.Add(interest);
-
             }
-
           
             return Ok();
-
         }
 
         [HttpPut("{id}/interest/remove")]
         public ActionResult RemoveInterest(string id, string interest)
         {
-
             var userIntrestList = _userRepository.GetSingleUser(id).Interests;
 
             userIntrestList.Remove(interest);
