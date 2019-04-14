@@ -17,6 +17,31 @@ namespace ClinkedIn.Data
             new User("GoldenState","99dj$2!&adfg", new DateTime(2074, 6, 3)){ Id = "df7472d4-dc25-4ba4-8d03-8dfe4cf2481e" },
         };
 
+        static List<string> _intrest = new List<string> {
+            "Killing",
+            "Hair Braiding",
+            "Murder",
+            "Drinking",
+            "Drugs"
+        };
+
+        public string ReadInterestList()
+        {
+            var listOfIntrest = " ";
+            foreach (string intrestThing in _intrest)
+            {
+                listOfIntrest += intrestThing + (" , ");
+            }
+            return listOfIntrest;
+        }
+
+        //public User CommonInterestList(string interest)
+        //{
+        //    var singleUserInterest = _users.Find(x => x.Interests = interest);
+        //    return singleUser;
+        //}
+
+
         public User AddUser(string username, string password, DateTime releaseDate)
         {
             var newUser = new User(username, password, releaseDate);
@@ -41,5 +66,11 @@ namespace ClinkedIn.Data
             _users.Remove(user);
 
         }
+
+        //public string GetInterest(string interest)
+        //{
+        //    var singleUser = _users.FirstOrDefault(user => user.Interests == interest);
+        //    return singleUser;
+        //}
     }
 }

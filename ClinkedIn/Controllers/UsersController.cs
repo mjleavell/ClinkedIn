@@ -105,36 +105,96 @@ namespace ClinkedIn.Controllers
             }
         }
 
+
+        // -------------------------------- Interests --------------------------------
+
         [HttpGet("{id}/interest")]
         public ActionResult ListInterest(string id)
         {
-            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
-            return Ok(userIntrestList);
+            var userInterestList = _userRepository.GetSingleUser(id).Interests;
+            return Ok(userInterestList);
         }
 
         [HttpPut("{id}/interest/add")]
         public ActionResult AddInterest(string id, string interest)
         {
 
-            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
-            if (userIntrestList.Contains(interest))
+            var userInterestList = _userRepository.GetSingleUser(id).Interests;
+            if (userInterestList.Contains(interest))
             {
                 return BadRequest(new { error = $"I'm sorry but {interest} is alreday in your list" });
             }
-            else {
-                userIntrestList.Add(interest);
+            else
+            {
+                userInterestList.Add(interest);
             }
           
+
             return Ok();
         }
 
         [HttpPut("{id}/interest/remove")]
         public ActionResult RemoveInterest(string id, string interest)
         {
-            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
+            var userInterestList = _userRepository.GetSingleUser(id).Interests;
 
-            userIntrestList.Remove(interest);
+            userInterestList.Remove(interest);
             return Ok();
+        }
+
+        [HttpGet("interest/list")]
+        public ActionResult Interest()
+        {
+            var userIntrestList = _userRepository.ReadInterestList();
+            return Ok(userIntrestList);
+        }
+
+        [HttpGet("interest/common")]
+        public ActionResult CommonInterest(string interest)
+        {
+            var aUser = _userRepository.GetAllUsers();
+            string commonInterestusers = "";
+            //var aUsersInterest = aUser.First(user => user.Interests = interest);
+            foreach (User individualUser in aUser)
+            {
+                string thisTHing = individualUser.ToString();
+                var thisListInterest = individualUser.Interests;
+                foreach (string inmateInterest in thisListInterest)
+                {
+                    commonInterestusers += individualUser.Username;
+                }
+
+            }
+
+
+
+            return Ok(commonInterestusers);
+
+        }
+
+        // -------------------------------- Services --------------------------------
+
+        [HttpGet("{id}/service")]
+        public ActionResult ListService(string id)
+        {
+            var userServiceList = _userRepository.GetSingleUser(id).Services;
+            return Ok(userServiceList);
+        }
+
+        [HttpPut("{id}/service/add")]
+        public ActionResult AddService(string id, string service)
+        {
+            var userServiceList = _userRepository.GetSingleUser(id).Services;
+
+            if(!userServiceList.Contains(service))
+            {
+                userServiceList.Add(service);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("You can't add the same service twice...");
+            }
         }
 
         // -------------------------------- Enemies --------------------------------
