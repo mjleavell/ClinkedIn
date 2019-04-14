@@ -73,7 +73,8 @@ namespace ClinkedIn.Controllers
             if (!user.Friends.Contains(friendToAdd) && user.Id != friendId)
             {
                 user.Friends.Add(friendToAdd);
-                return Ok(user);
+                var friendsOfUser = user.Friends.Select(friend => friend.Username);
+                return Ok(friendsOfUser);
             }
             else if (user.Id == friendId)
             {
@@ -96,7 +97,7 @@ namespace ClinkedIn.Controllers
             if (user.Friends.Contains(friendToRemove))
             {
                 user.Friends.Remove(friendToRemove);
-                return Ok(user);
+                return Ok($"{user.Username} is no longer friends with {friendToRemove.Username}");
             }
             else
             {
@@ -239,6 +240,5 @@ namespace ClinkedIn.Controllers
 
             return Ok($"{inmateString} are the inmates at Warden {wardenString}'s prison.");
         }
-
     }
 }
