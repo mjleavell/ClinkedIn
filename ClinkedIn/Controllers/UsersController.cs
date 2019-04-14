@@ -104,8 +104,19 @@ namespace ClinkedIn.Controllers
             }
         }
 
-        // GET User's Friends of Friends
+        // GET User's Friends
         [HttpGet("{userId}/friends")]
+        public ActionResult GetFriends(string userId)
+        {
+            var user = _userRepository.GetSingleUser(userId);
+            if (user.Friends.Count == 0) return BadRequest(new { error = $"{user.Username} doesnt have any friends" });
+
+            var friendsOfUser = user.Friends.Select(friend => friend.Username);
+            return Ok(friendsOfUser);
+        }
+
+        // GET User's Friends of Friends
+        [HttpGet("{userId}/friends/friendsOfFriends")]
         public ActionResult GetFriendsOfFriends(string userId)
         {
             var user = _userRepository.GetSingleUser(userId);
