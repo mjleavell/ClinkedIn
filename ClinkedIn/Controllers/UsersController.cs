@@ -226,6 +226,19 @@ namespace ClinkedIn.Controllers
             return Ok($"{inmate.Username} has {daysTilRelease} days till they are released");
         }
 
+        //------------------------ Warden ----------------------
+        [HttpGet("warden")]
+        public ActionResult GetAllInmatesForWarden(string userId)
+        {
+            var allUsers = _userRepository.GetAllUsers();
+            var inmates = allUsers.Where(user => user.IsWarden == false).Select(user => user.Username);
+            var warden = allUsers.Where(user => user.IsWarden == true).Select(user => user.Username);
+
+            string inmateString = string.Join(", ", inmates);
+            string wardenString = string.Join("", warden);
+
+            return Ok($"{inmateString} are the inmates at Warden {wardenString}'s prison.");
+        }
 
     }
 }
