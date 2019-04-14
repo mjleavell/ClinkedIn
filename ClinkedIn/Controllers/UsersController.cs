@@ -225,5 +225,7 @@ namespace ClinkedIn.Controllers
 
             return Ok($"{inmate.Username} has {daysTilRelease} days till they are released");
         }
+
+
     }
 }

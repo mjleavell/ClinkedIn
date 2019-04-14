@@ -15,6 +15,7 @@ namespace ClinkedIn.Models
             ReleaseDate = releaseDate;
             Friends = new List<User>();
             Enemies = new List<User>();
+            IsWarden = false;
         }
 
         public string Id { get; set; }
@@ -25,6 +26,7 @@ namespace ClinkedIn.Models
         public List<string> Services { get; set; } = new List<string> { "BraidingHair" };
         public List<User> Friends { get; set; }
         public List<User> Enemies { get; set; }
+        public bool IsWarden { get; set; }
     };
 
 }
