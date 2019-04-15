@@ -15,6 +15,7 @@ namespace ClinkedIn.Data
             new User("Chase","runFasterYouCantCatchMe", new DateTime(2023, 10, 31)){ Id = "3256cd61-872d-4c65-858a-e5b54a80c4c9" },
             new User("TedBundy","I@mTheW0rst", new DateTime(2134, 2, 14)){ Id = "f04da242-77bd-49ba-a13e-b186c05878ed" },
             new User("GoldenState","99dj$2!&adfg", new DateTime(2074, 6, 3)){ Id = "df7472d4-dc25-4ba4-8d03-8dfe4cf2481e" },
+            new User("HenryPope","Pris0nBre@kW@rden", new DateTime(2009, 1, 2)){ Id = "c77b3ad9-296e-4db7-b73f-e887aadbf57e", IsWarden = true },
         };
 
         public User AddUser(string username, string password, DateTime releaseDate)

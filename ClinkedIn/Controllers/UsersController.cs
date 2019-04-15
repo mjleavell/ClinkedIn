@@ -73,7 +73,8 @@ namespace ClinkedIn.Controllers
             if (!user.Friends.Contains(friendToAdd) && user.Id != friendId)
             {
                 user.Friends.Add(friendToAdd);
-                return Ok(user);
+                var friendsOfUser = user.Friends.Select(friend => friend.Username);
+                return Ok(friendsOfUser);
             }
             else if (user.Id == friendId)
             {
@@ -96,7 +97,7 @@ namespace ClinkedIn.Controllers
             if (user.Friends.Contains(friendToRemove))
             {
                 user.Friends.Remove(friendToRemove);
-                return Ok(user);
+                return Ok($"{user.Username} is no longer friends with {friendToRemove.Username}");
             }
             else
             {
@@ -235,6 +236,20 @@ namespace ClinkedIn.Controllers
             var daysTilRelease = inmate.ReleaseDate.Subtract(DateTime.Today).Days;
 
             return Ok($"{inmate.Username} has {daysTilRelease} days till they are released");
+        }
+
+        //------------------------ Warden ----------------------
+        [HttpGet("warden")]
+        public ActionResult GetAllInmatesForWarden(string userId)
+        {
+            var allUsers = _userRepository.GetAllUsers();
+            var inmates = allUsers.Where(user => user.IsWarden == false).Select(user => user.Username);
+            var warden = allUsers.Where(user => user.IsWarden == true).Select(user => user.Username);
+
+            string inmateString = string.Join(", ", inmates);
+            string wardenString = string.Join("", warden);
+
+            return Ok($"{inmateString} are the inmates at Warden {wardenString}'s prison.");
         }
     }
 }
