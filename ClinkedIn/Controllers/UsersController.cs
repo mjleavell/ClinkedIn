@@ -15,8 +15,10 @@ namespace ClinkedIn.Controllers
     {
         readonly UserRepository _userRepository;
         readonly CreateUserRequestValidator _validator;
+
         readonly User _user;
         readonly Interests interest;
+
 
         public UsersController()
         {
@@ -63,6 +65,7 @@ namespace ClinkedIn.Controllers
         }
 
         // -------------------------------- Friends --------------------------------
+
         // Add Friend to User
         [HttpPut("{userId}/addFriend/{friendId}")]
         public ActionResult AddFriend(string userId, string friendId)
@@ -74,7 +77,8 @@ namespace ClinkedIn.Controllers
             if (!user.Friends.Contains(friendToAdd) && user.Id != friendId)
             {
                 user.Friends.Add(friendToAdd);
-                return Ok(user);
+                var friendsOfUser = user.Friends.Select(friend => friend.Username);
+                return Ok(friendsOfUser);
             }
             else if (user.Id == friendId)
             {
@@ -97,12 +101,38 @@ namespace ClinkedIn.Controllers
             if (user.Friends.Contains(friendToRemove))
             {
                 user.Friends.Remove(friendToRemove);
-                return Ok(user);
+                return Ok($"{user.Username} is no longer friends with {friendToRemove.Username}");
             }
             else
             {
                 return BadRequest(new { error = $"I'm sorry {user.Username}, but you don't have any friends. You should be nicer to people." });
             }
+        }
+
+
+        // GET User's Friends
+        [HttpGet("{userId}/friends")]
+        public ActionResult GetFriends(string userId)
+        {
+            var user = _userRepository.GetSingleUser(userId);
+            if (user.Friends.Count == 0) return BadRequest(new { error = $"{user.Username} doesnt have any friends" });
+
+            var friendsOfUser = user.Friends.Select(friend => friend.Username);
+            return Ok(friendsOfUser);
+        }
+
+        // GET User's Friends of Friends
+        [HttpGet("{userId}/friends/friendsOfFriends")]
+        public ActionResult GetFriendsOfFriends(string userId)
+        {
+            var user = _userRepository.GetSingleUser(userId);
+            if (user.Friends.Count == 0) return BadRequest(new { error = $"{user.Username} doesnt have any friends" });
+
+            var friendsOfUser = user.Friends
+                .SelectMany(friend => friend.Friends)
+                .Where(f => f != user).ToList();
+            var friends = friendsOfUser.Select(friend => friend.Username).Distinct();
+            return Ok(friends);
         }
 
 
@@ -138,8 +168,10 @@ namespace ClinkedIn.Controllers
         {
             var userInterestList = _userRepository.GetSingleUser(id).Interests;
 
+
             userInterestList.Remove(interest);
             return Ok();
+
         }
 
         [HttpGet("interest/list")]
@@ -169,8 +201,6 @@ namespace ClinkedIn.Controllers
                 }
 
             }
-
-
 
             return Ok(commonInterestusers);
 
@@ -202,6 +232,7 @@ namespace ClinkedIn.Controllers
         }
 
         // -------------------------------- Enemies --------------------------------
+
         // Add Enemy to User //
         [HttpPut("{userId}/addEnemy/{enemyId}")]
         public ActionResult AddEnemy(string userId, string enemyId)
@@ -226,7 +257,7 @@ namespace ClinkedIn.Controllers
         }
 
         // Get enemy of User //
-        [HttpGet("{userId}/enemies")]
+        [HttpGet("{userI    d}/enemies")]
         public ActionResult GetEnemies(string userId)
         {
             var inmateEnemies = _userRepository.GetSingleUser(userId);
@@ -250,7 +281,31 @@ namespace ClinkedIn.Controllers
             {
                 return BadRequest("Congratulations! You don't have any enemies...or so you think...so watch your back...");
             }
+        }
 
+        //------------------------ Release Date Calculation ----------------------
+        
+        [HttpGet("{userId}/release")]
+        public ActionResult GetDaysTilRelease(string userId)
+        {
+            var inmate = _userRepository.GetSingleUser(userId);
+            var daysTilRelease = inmate.ReleaseDate.Subtract(DateTime.Today).Days;
+
+            return Ok($"{inmate.Username} has {daysTilRelease} days till they are released");
+        }
+
+        //------------------------ Warden ----------------------
+        [HttpGet("warden")]
+        public ActionResult GetAllInmatesForWarden(string userId)
+        {
+            var allUsers = _userRepository.GetAllUsers();
+            var inmates = allUsers.Where(user => user.IsWarden == false).Select(user => user.Username);
+            var warden = allUsers.Where(user => user.IsWarden == true).Select(user => user.Username);
+
+            string inmateString = string.Join(", ", inmates);
+            string wardenString = string.Join("", warden);
+
+            return Ok($"{inmateString} are the inmates at Warden {wardenString}'s prison.");
         }
     }
 }
