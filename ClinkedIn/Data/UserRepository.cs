@@ -14,7 +14,10 @@ namespace ClinkedIn.Data
             new User("OtherAdam","asjdfasd", new DateTime(2025, 5, 15)){ Id = "1ab01a37-2718-4852-b6c0-65668e71c223" },
             new User("Chase","runFasterYouCantCatchMe", new DateTime(2023, 10, 31)){ Id = "3256cd61-872d-4c65-858a-e5b54a80c4c9" },
             new User("TedBundy","I@mTheW0rst", new DateTime(2134, 2, 14)){ Id = "f04da242-77bd-49ba-a13e-b186c05878ed" },
-            new User("GoldenState","99dj$2!&adfg", new DateTime(2074, 6, 3)){ Id = "df7472d4-dc25-4ba4-8d03-8dfe4cf2481e" },
+            new User("JohnWayneGacy","99dj$2!&adfg", new DateTime(2074, 6, 3)){ Id = "df7472d4-dc25-4ba4-8d03-8dfe4cf2481e" },
+            new User("JeffreyDahmer","2821349!&adfg", new DateTime(2238, 12, 24)){ Id = "a98a1255-2765-4530-b1cf-189b298d38a3" },
+            new User("RichardRamirez","TheNightStalker98321", new DateTime(2190, 12, 12)){ Id = "4ebf96b1-591e-48da-933d-5c344f7a03ab" },
+            new User("CharlesManson","aksdfhke1234", new DateTime(2138, 11, 19)){ Id = "334f467a-a2ae-4304-abcc-30d59923c192" },
             new User("HenryPope","Pris0nBre@kW@rden", new DateTime(2009, 1, 2)){ Id = "c77b3ad9-296e-4db7-b73f-e887aadbf57e", IsWarden = true },
         };
 
@@ -55,13 +58,10 @@ namespace ClinkedIn.Data
             return singleUser;
         }
 
-        public void DeleteUser(string userId)
+        public bool DeleteUser(string userId)
         {
             var user = _users.FirstOrDefault(singleUser => singleUser.Id == userId);
-            _users.Remove(user);
-
+            return _users.Remove(user);
         }
-
-     
     }
 }
