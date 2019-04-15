@@ -16,10 +16,6 @@ namespace ClinkedIn.Controllers
         readonly UserRepository _userRepository;
         readonly CreateUserRequestValidator _validator;
 
-        readonly User _user;
-        readonly Interests interest;
-
-
         public UsersController()
         {
             _validator = new CreateUserRequestValidator();
@@ -32,7 +28,6 @@ namespace ClinkedIn.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
-            //var users = _userRepository.GetAllUsers();
             return Ok(_userRepository.GetAllUsers());
         }
 
@@ -45,7 +40,6 @@ namespace ClinkedIn.Controllers
 
         // Add User
         [HttpPost("register")]
-        //public ActionResult AddUser([FromBody]CreateUserRequest createRequest)
         public ActionResult AddUser(CreateUserRequest createRequest)
         {
             if (!_validator.Validate(createRequest))
@@ -58,10 +52,18 @@ namespace ClinkedIn.Controllers
         }
 
         // Delete User
-        [HttpDelete("{id}")]
-        public void DeleteUser(string id)
+        [HttpDelete("{id}/delete")]
+        public ActionResult DeleteUser(string id)
         {
-            _userRepository.DeleteUser(id);
+            var wasUserDeleted = _userRepository.DeleteUser(id);
+            if (wasUserDeleted)
+            {
+                return Ok($"The user was deleted.");
+            }
+            else
+            {
+                return BadRequest(new { error = "The user you entered does not exist." });
+            }
         }
 
         // -------------------------------- Friends --------------------------------
@@ -108,7 +110,6 @@ namespace ClinkedIn.Controllers
                 return BadRequest(new { error = $"I'm sorry {user.Username}, but you don't have any friends. You should be nicer to people." });
             }
         }
-
 
         // GET User's Friends
         [HttpGet("{userId}/friends")]
@@ -195,7 +196,7 @@ namespace ClinkedIn.Controllers
                 {
                     if (inmateInterest == interest)
                     {
-                        commonInterestusers += individualUser.Username + ",";
+                        commonInterestusers += individualUser.Username + ", ";
                     }
                     
                 }

@@ -55,13 +55,10 @@ namespace ClinkedIn.Data
             return singleUser;
         }
 
-        public void DeleteUser(string userId)
+        public bool DeleteUser(string userId)
         {
             var user = _users.FirstOrDefault(singleUser => singleUser.Id == userId);
-            _users.Remove(user);
-
+            return _users.Remove(user);
         }
-
-     
     }
 }
