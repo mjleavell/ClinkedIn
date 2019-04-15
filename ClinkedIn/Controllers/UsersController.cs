@@ -232,6 +232,15 @@ namespace ClinkedIn.Controllers
             }
         }
 
+        [HttpPut("{id}/service/remove")]
+        public ActionResult RemoveService(string id, string service)
+        {
+            var userServicesList = _userRepository.GetSingleUser(id).Services;
+
+            userServicesList.Remove(service);
+            return Ok();
+        }
+
         // -------------------------------- Enemies --------------------------------
 
         // Add Enemy to User //
@@ -258,7 +267,7 @@ namespace ClinkedIn.Controllers
         }
 
         // Get enemy of User //
-        [HttpGet("{userI    d}/enemies")]
+        [HttpGet("{userId}/enemies")]
         public ActionResult GetEnemies(string userId)
         {
             var inmateEnemies = _userRepository.GetSingleUser(userId);
