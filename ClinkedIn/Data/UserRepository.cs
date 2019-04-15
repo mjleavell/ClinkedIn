@@ -18,6 +18,25 @@ namespace ClinkedIn.Data
             new User("HenryPope","Pris0nBre@kW@rden", new DateTime(2009, 1, 2)){ Id = "c77b3ad9-296e-4db7-b73f-e887aadbf57e", IsWarden = true },
         };
 
+        static List<string> _intrest = new List<string> {
+            "Killing",
+            "Hair Braiding",
+            "Murder",
+            "Drinking",
+            "Drugs"
+        };
+
+        public string ReadInterestList()
+        {
+            var listOfIntrest = " ";
+            foreach (string intrestThing in _intrest)
+            {
+                listOfIntrest += intrestThing + (" , ");
+            }
+            return listOfIntrest;
+        }
+
+
         public User AddUser(string username, string password, DateTime releaseDate)
         {
             var newUser = new User(username, password, releaseDate);
@@ -42,5 +61,7 @@ namespace ClinkedIn.Data
             _users.Remove(user);
 
         }
+
+     
     }
 }

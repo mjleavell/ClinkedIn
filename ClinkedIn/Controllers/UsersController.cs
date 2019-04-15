@@ -105,6 +105,7 @@ namespace ClinkedIn.Controllers
             }
         }
 
+
         // GET User's Friends
         [HttpGet("{userId}/friends")]
         public ActionResult GetFriends(string userId)
@@ -130,22 +131,75 @@ namespace ClinkedIn.Controllers
             return Ok(friends);
         }
 
+
         // -------------------------------- Interests --------------------------------
 
         [HttpGet("{id}/interest")]
         public ActionResult ListInterest(string id)
         {
-            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
-            return Ok(userIntrestList);
+            var userInterestList = _userRepository.GetSingleUser(id).Interests;
+            return Ok(userInterestList);
         }
 
         [HttpPut("{id}/interest/add")]
         public ActionResult AddInterest(string id, string interest)
         {
-            var userIntrestList = _userRepository.GetSingleUser(id).Interests;
 
-            userIntrestList.Add(interest);
+            var userInterestList = _userRepository.GetSingleUser(id).Interests;
+            if (userInterestList.Contains(interest))
+            {
+                return BadRequest(new { error = $"I'm sorry but {interest} is alreday in your list" });
+            }
+            else
+            {
+                userInterestList.Add(interest);
+            }
+          
+
             return Ok();
+        }
+
+        [HttpPut("{id}/interest/remove")]
+        public ActionResult RemoveInterest(string id, string interest)
+        {
+            var userInterestList = _userRepository.GetSingleUser(id).Interests;
+
+
+            userInterestList.Remove(interest);
+            return Ok();
+
+        }
+
+        [HttpGet("interest/list")]
+        public ActionResult Interest()
+        {
+            var userIntrestList = _userRepository.ReadInterestList();
+            return Ok(userIntrestList);
+        }
+
+        [HttpGet("interest/common")]
+        public ActionResult CommonInterest(string interest)
+        {
+            var aUser = _userRepository.GetAllUsers();
+            string commonInterestusers = "";
+            //var aUsersInterest = aUser.First(user => user.Interests = interest);
+            foreach (User individualUser in aUser)
+            {
+                string thisTHing = individualUser.ToString();
+                var thisListInterest = individualUser.Interests;
+                foreach (string inmateInterest in thisListInterest)
+                {
+                    if (inmateInterest == interest)
+                    {
+                        commonInterestusers += individualUser.Username + ",";
+                    }
+                    
+                }
+
+            }
+
+            return Ok(commonInterestusers);
+
         }
 
         // -------------------------------- Services --------------------------------
@@ -157,11 +211,9 @@ namespace ClinkedIn.Controllers
             return Ok(userServiceList);
         }
 
-
         [HttpPut("{id}/service/add")]
         public ActionResult AddService(string id, string service)
         {
-
             var userServiceList = _userRepository.GetSingleUser(id).Services;
 
             if(!userServiceList.Contains(service))
