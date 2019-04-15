@@ -161,7 +161,11 @@ namespace ClinkedIn.Controllers
                 var thisListInterest = individualUser.Interests;
                 foreach (string inmateInterest in thisListInterest)
                 {
-                    commonInterestusers += individualUser.Username;
+                    if (inmateInterest == interest)
+                    {
+                        commonInterestusers += individualUser.Username + ",";
+                    }
+                    
                 }
 
             }
