@@ -15,15 +15,12 @@ namespace ClinkedIn.Controllers
     {
         readonly UserRepository _userRepository;
         readonly CreateUserRequestValidator _validator;
-        readonly User _user;
-        readonly Interests interest;
 
         public UsersController()
         {
             _validator = new CreateUserRequestValidator();
             _userRepository = new UserRepository();
         }
-
 
         // -------------------------------- Users --------------------------------
 
@@ -41,7 +38,6 @@ namespace ClinkedIn.Controllers
         {
             return Ok(_userRepository.GetSingleUser(id));
         }
-
 
         // Add User
         [HttpPost("register")]
@@ -64,8 +60,8 @@ namespace ClinkedIn.Controllers
             _userRepository.DeleteUser(id);
         }
 
-
         // -------------------------------- Friends --------------------------------
+
         // Add Friend to User
         [HttpPut("{userId}/addFriend/{friendId}")]
         public ActionResult AddFriend(string userId, string friendId)
@@ -108,8 +104,32 @@ namespace ClinkedIn.Controllers
             }
         }
 
-        // -------------------------------- Interests --------------------------------
+        // GET User's Friends
+        [HttpGet("{userId}/friends")]
+        public ActionResult GetFriends(string userId)
+        {
+            var user = _userRepository.GetSingleUser(userId);
+            if (user.Friends.Count == 0) return BadRequest(new { error = $"{user.Username} doesnt have any friends" });
 
+            var friendsOfUser = user.Friends.Select(friend => friend.Username);
+            return Ok(friendsOfUser);
+        }
+
+        // GET User's Friends of Friends
+        [HttpGet("{userId}/friends/friendsOfFriends")]
+        public ActionResult GetFriendsOfFriends(string userId)
+        {
+            var user = _userRepository.GetSingleUser(userId);
+            if (user.Friends.Count == 0) return BadRequest(new { error = $"{user.Username} doesnt have any friends" });
+
+            var friendsOfUser = user.Friends
+                .SelectMany(friend => friend.Friends)
+                .Where(f => f != user).ToList();
+            var friends = friendsOfUser.Select(friend => friend.Username).Distinct();
+            return Ok(friends);
+        }
+
+        // -------------------------------- Interests --------------------------------
 
         [HttpGet("{id}/interest")]
         public ActionResult ListInterest(string id)
@@ -118,17 +138,13 @@ namespace ClinkedIn.Controllers
             return Ok(userIntrestList);
         }
 
-
         [HttpPut("{id}/interest/add")]
         public ActionResult AddInterest(string id, string interest)
         {
-
             var userIntrestList = _userRepository.GetSingleUser(id).Interests;
 
             userIntrestList.Add(interest);
             return Ok();
-            //return Created($"users/{_user.Id}", interest);
-
         }
 
         // -------------------------------- Services --------------------------------
@@ -159,6 +175,7 @@ namespace ClinkedIn.Controllers
         }
 
         // -------------------------------- Enemies --------------------------------
+
         // Add Enemy to User //
         [HttpPut("{userId}/addEnemy/{enemyId}")]
         public ActionResult AddEnemy(string userId, string enemyId)
@@ -183,7 +200,7 @@ namespace ClinkedIn.Controllers
         }
 
         // Get enemy of User //
-        [HttpGet("{userId}/enemies")]
+        [HttpGet("{userI    d}/enemies")]
         public ActionResult GetEnemies(string userId)
         {
             var inmateEnemies = _userRepository.GetSingleUser(userId);
