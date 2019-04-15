@@ -16,10 +16,6 @@ namespace ClinkedIn.Controllers
         readonly UserRepository _userRepository;
         readonly CreateUserRequestValidator _validator;
 
-        readonly User _user;
-        readonly Interests interest;
-
-
         public UsersController()
         {
             _validator = new CreateUserRequestValidator();
