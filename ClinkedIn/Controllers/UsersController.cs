@@ -26,7 +26,7 @@ namespace ClinkedIn.Controllers
 
         // Get All Users
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers()
+        public ActionResult GetUsers()
         {
             return Ok(_userRepository.GetAllUsers());
         }

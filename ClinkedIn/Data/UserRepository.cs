@@ -1,6 +1,7 @@
 ﻿using ClinkedIn.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +9,8 @@ namespace ClinkedIn.Data
 {
     public class UserRepository
     {
+        const string ConnectionString = "Server = localhost; Database = ClinkedIn; Trusted_Connection = True;";
+
         static List<User> _users = new List<User>
         {
             new User("WayneWorld","3425dsfsa", new DateTime(2020, 1, 31)){ Id = "094b3963-e404-49fa-923f-37dd3ce610b7" },
@@ -39,7 +42,6 @@ namespace ClinkedIn.Data
             return listOfIntrest;
         }
 
-
         public User AddUser(string username, string password, DateTime releaseDate)
         {
             var newUser = new User(username, password, releaseDate);
@@ -49,7 +51,29 @@ namespace ClinkedIn.Data
 
         public List<User> GetAllUsers()
         {
-            return _users;
+            var users = new List<User>(); 
+            var connection = new SqlConnection(ConnectionString);
+            connection.Open();
+
+            var getAllUsersCommand = connection.CreateCommand(); 
+            getAllUsersCommand.CommandText = "select * from users";
+
+            var reader = getAllUsersCommand.ExecuteReader(); // Excecute the reader! // if you don't care about the result and just want to know how many things were affected, use the ExecuteNonQuery
+                                                             // ExecuteScalar for top left value - 1 column / 1 row
+            while (reader.Read())
+            {
+                var id = reader["Id"].ToString(); //(int) is there to turn it into an int
+                var username = reader["username"].ToString();
+                var password = reader["password"].ToString();
+                var releaseDate = (DateTime)reader["releaseDate"];
+                var user = new User(username, password, releaseDate) { Id = id };
+
+                users.Add(user);
+            }
+
+            connection.Close(); // Close it down!
+
+            return users;
         }
 
         public User GetSingleUser(string userId)
