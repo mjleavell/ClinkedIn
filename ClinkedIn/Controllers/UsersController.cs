@@ -46,7 +46,7 @@ namespace ClinkedIn.Controllers
             {
                 return BadRequest(new { error = "users must have a username and password" });
             }
-            var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.ReleaseDate);
+            var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.ReleaseDate, createRequest.Age, createRequest.IsPrisoner);
 
             return Created($"api/users/{newUser.Id}", newUser);
         }
