@@ -13,15 +13,15 @@ namespace ClinkedIn.Data
 
         static List<User> _users = new List<User>
         {
-            new User("WayneWorld","3425dsfsa", new DateTime(2020, 1, 31)){ Id = "094b3963-e404-49fa-923f-37dd3ce610b7" },
-            new User("OtherAdam","asjdfasd", new DateTime(2025, 5, 15)){ Id = "1ab01a37-2718-4852-b6c0-65668e71c223" },
-            new User("Chase","runFasterYouCantCatchMe", new DateTime(2023, 10, 31)){ Id = "3256cd61-872d-4c65-858a-e5b54a80c4c9" },
-            new User("TedBundy","I@mTheW0rst", new DateTime(2134, 2, 14)){ Id = "f04da242-77bd-49ba-a13e-b186c05878ed" },
-            new User("JohnWayneGacy","99dj$2!&adfg", new DateTime(2074, 6, 3)){ Id = "df7472d4-dc25-4ba4-8d03-8dfe4cf2481e" },
-            new User("JeffreyDahmer","2821349!&adfg", new DateTime(2238, 12, 24)){ Id = "a98a1255-2765-4530-b1cf-189b298d38a3" },
-            new User("RichardRamirez","TheNightStalker98321", new DateTime(2190, 12, 12)){ Id = "4ebf96b1-591e-48da-933d-5c344f7a03ab" },
-            new User("CharlesManson","aksdfhke1234", new DateTime(2138, 11, 19)){ Id = "334f467a-a2ae-4304-abcc-30d59923c192" },
-            new User("HenryPope","Pris0nBre@kW@rden", new DateTime(2009, 1, 2)){ Id = "c77b3ad9-296e-4db7-b73f-e887aadbf57e", IsWarden = true },
+            //new user("wayneworld","3425dsfsa", new datetime(2020, 1, 31)){ id = "094b3963-e404-49fa-923f-37dd3ce610b7" },
+            //new user("otheradam","asjdfasd", new datetime(2025, 5, 15)){ id = "1ab01a37-2718-4852-b6c0-65668e71c223" },
+            //new user("chase","runfasteryoucantcatchme", new datetime(2023, 10, 31)){ id = "3256cd61-872d-4c65-858a-e5b54a80c4c9" },
+            //new user("tedbundy","i@mthew0rst", new datetime(2134, 2, 14)){ id = "f04da242-77bd-49ba-a13e-b186c05878ed" },
+            //new user("johnwaynegacy","99dj$2!&adfg", new datetime(2074, 6, 3)){ id = "df7472d4-dc25-4ba4-8d03-8dfe4cf2481e" },
+            //new user("jeffreydahmer","2821349!&adfg", new datetime(2238, 12, 24)){ id = "a98a1255-2765-4530-b1cf-189b298d38a3" },
+            //new user("richardramirez","thenightstalker98321", new datetime(2190, 12, 12)){ id = "4ebf96b1-591e-48da-933d-5c344f7a03ab" },
+            //new user("charlesmanson","aksdfhke1234", new datetime(2138, 11, 19)){ id = "334f467a-a2ae-4304-abcc-30d59923c192" },
+            //new user("henrypope","pris0nbre@kw@rden", new datetime(2009, 1, 2)){ id = "c77b3ad9-296e-4db7-b73f-e887aadbf57e", iswarden = true },
         };
 
         static List<string> _intrest = new List<string> {
@@ -42,11 +42,40 @@ namespace ClinkedIn.Data
             return listOfIntrest;
         }
 
-        public User AddUser(string username, string password, DateTime releaseDate)
+        public User AddUser(string username, string password, DateTime releaseDate, int age, bool isPrisoner)
         {
-            var newUser = new User(username, password, releaseDate);
-            _users.Add(newUser);
-            return newUser;
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var insertUserCommand = connection.CreateCommand();
+                insertUserCommand.CommandText = $@"Insert into Users (username,password, releaseDate, age, isPrisoner)
+                                            Output inserted.*
+                                            Values(@username,@password,@releaseDate,@age,@isPrisoner)";
+
+                insertUserCommand.Parameters.AddWithValue("username", username);
+                insertUserCommand.Parameters.AddWithValue("password", password);
+                insertUserCommand.Parameters.AddWithValue("releaseDate", releaseDate);
+                insertUserCommand.Parameters.AddWithValue("age", age);
+                insertUserCommand.Parameters.AddWithValue("isPrisoner", isPrisoner);
+
+                var reader = insertUserCommand.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    var insertedPassword = reader["password"].ToString();
+                    var insertedUsername = reader["username"].ToString();
+                    var insertedReleaseDate = (DateTime)reader["releaseDate"];
+                    var insertedAge = (int)reader["age"];
+                    var insertedId = reader["Id"].ToString();
+                    var insertedIsPrisoner = (bool)reader["isPrisoner"];
+
+                    var newUser = new User(insertedUsername, insertedPassword, insertedReleaseDate, insertedAge, insertedIsPrisoner) { Id = insertedId };
+
+                    return newUser;
+                }
+            }
+
+            throw new Exception("No user found");
         }
 
         public List<User> GetAllUsers()
@@ -66,7 +95,9 @@ namespace ClinkedIn.Data
                 var username = reader["username"].ToString();
                 var password = reader["password"].ToString();
                 var releaseDate = (DateTime)reader["releaseDate"];
-                var user = new User(username, password, releaseDate) { Id = id };
+                var age = (int)reader["age"];
+                var isPrisoner = (bool)reader["isPrisoner"];
+                var user = new User(username, password, releaseDate, age, isPrisoner) { Id = id };
 
                 users.Add(user);
             }
