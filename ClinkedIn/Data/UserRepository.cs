@@ -52,7 +52,7 @@ namespace ClinkedIn.Data
         public List<User> GetAllUsers()
         {
             var users = new List<User>(); 
-            var connection = new SqlConnection("Server = localhost; Database = ClinkedIn; Trusted_Connection = True;");
+            var connection = new SqlConnection(ConnectionString);
             connection.Open();
 
             var getAllUsersCommand = connection.CreateCommand(); 
