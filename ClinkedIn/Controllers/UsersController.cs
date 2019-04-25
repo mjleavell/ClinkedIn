@@ -38,6 +38,13 @@ namespace ClinkedIn.Controllers
             return Ok(_userRepository.GetSingleUser(id));
         }
 
+        // Get Update IsPrisoner User
+        [HttpPut("{id}")]
+        public ActionResult UpdateIsPrisoner(string id, bool isPrisoner)
+        {
+            return Ok(_userRepository.UpdateUser(id, isPrisoner));
+        }
+
         // Add User
         [HttpPost("register")]
         public ActionResult AddUser(CreateUserRequest createRequest)

@@ -11,8 +11,8 @@ namespace ClinkedIn.Data
     {
         const string ConnectionString = "Server = localhost; Database = ClinkedIn; Trusted_Connection = True;";
 
-        static List<User> _users = new List<User>
-        {
+        static List<User> _users = new List<User>();
+        //{
             //new user("wayneworld","3425dsfsa", new datetime(2020, 1, 31)){ id = "094b3963-e404-49fa-923f-37dd3ce610b7" },
             //new user("otheradam","asjdfasd", new datetime(2025, 5, 15)){ id = "1ab01a37-2718-4852-b6c0-65668e71c223" },
             //new user("chase","runfasteryoucantcatchme", new datetime(2023, 10, 31)){ id = "3256cd61-872d-4c65-858a-e5b54a80c4c9" },
@@ -22,7 +22,7 @@ namespace ClinkedIn.Data
             //new user("richardramirez","thenightstalker98321", new datetime(2190, 12, 12)){ id = "4ebf96b1-591e-48da-933d-5c344f7a03ab" },
             //new user("charlesmanson","aksdfhke1234", new datetime(2138, 11, 19)){ id = "334f467a-a2ae-4304-abcc-30d59923c192" },
             //new user("henrypope","pris0nbre@kw@rden", new datetime(2009, 1, 2)){ id = "c77b3ad9-296e-4db7-b73f-e887aadbf57e", iswarden = true },
-        };
+        //};
 
         static List<string> _intrest = new List<string> {
             "Killing",
@@ -87,11 +87,11 @@ namespace ClinkedIn.Data
             var getAllUsersCommand = connection.CreateCommand(); 
             getAllUsersCommand.CommandText = "select * from users";
 
-            var reader = getAllUsersCommand.ExecuteReader(); // Excecute the reader! // if you don't care about the result and just want to know how many things were affected, use the ExecuteNonQuery
-                                                             // ExecuteScalar for top left value - 1 column / 1 row
+            var reader = getAllUsersCommand.ExecuteReader(); 
+
             while (reader.Read())
             {
-                var id = reader["Id"].ToString(); //(int) is there to turn it into an int
+                var id = reader["Id"].ToString(); 
                 var username = reader["username"].ToString();
                 var password = reader["password"].ToString();
                 var releaseDate = (DateTime)reader["releaseDate"];
@@ -102,10 +102,29 @@ namespace ClinkedIn.Data
                 users.Add(user);
             }
 
-            connection.Close(); // Close it down!
+            connection.Close();
 
             return users;
         }
+
+        public bool UpdateUser(string id, bool isPrisoner)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var insertUserCommand = connection.CreateCommand();
+                insertUserCommand.CommandText = $@"Update Users
+                                                   Set isPrisoner = '{isPrisoner}'
+                                                   where id = '{id}'";
+
+                var reader = insertUserCommand.ExecuteReader();
+
+                using (var db = new SqlConnection(_users.GetSqlConnection()))
+                {
+                    db.Execute($"UPDATE Tasks SET Task = '{item.Task}', CategoryId = {item.CategoryId} WHERE Id = {id};");
+                }
+            }
+
 
         public User GetSingleUser(string userId)
         {
