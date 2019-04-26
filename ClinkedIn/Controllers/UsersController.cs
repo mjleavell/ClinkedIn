@@ -40,9 +40,9 @@ namespace ClinkedIn.Controllers
 
         // Get Update IsPrisoner User
         [HttpPut("{id}")]
-        public ActionResult UpdateIsPrisoner(string id, bool isPrisoner)
+        public ActionResult UpdateIsPrisoner(string id)
         {
-            return Ok(_userRepository.UpdateUser(id, isPrisoner));
+            return Ok(_userRepository.UpdateUser(id));
         }
 
         // Add User
