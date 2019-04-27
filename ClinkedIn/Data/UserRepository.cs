@@ -110,21 +110,7 @@ namespace ClinkedIn.Data
 
         //public bool UpdateUser(string id)
         //{
-        //    using (var connection = new SqlConnection(ConnectionString))
-        //    {
-        //        connection.Open();
-        //        var insertUserCommand = connection.CreateCommand();
-        //        insertUserCommand.CommandText = $@"Update Users
-        //                                           Set isPrisoner = '{isPrisoner}'
-        //                                           where id = '{id}'";
 
-        //        var reader = insertUserCommand.ExecuteReader();
-        //        return true; 
-                //using (var db = new SqlConnection(_users.GetSqlConnection()))
-                //{
-                //    db.Execute($"UPDATE Tasks SET Task = '{item.Task}', CategoryId = {item.CategoryId} WHERE Id = {id};");
-                //}
-            //}
         //}
 
 
@@ -145,7 +131,7 @@ namespace ClinkedIn.Data
                 // if no users were returned, an error is thrown.
                 if (!reader.Read())
                 {
-                    throw new InvalidOperationException("No records were returned.");
+                    throw new InvalidOperationException("No user were returned.");
                 }
 
                 var singleUserId = reader["id"].ToString();
