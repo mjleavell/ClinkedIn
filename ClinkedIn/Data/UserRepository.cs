@@ -113,10 +113,58 @@ namespace ClinkedIn.Data
             return singleUser;
         }
 
-        public bool DeleteUser(string userId)
+        public User UpdateUser(bool IsPrisoner, int Id)
         {
-            var user = _users.FirstOrDefault(singleUser => singleUser.Id == userId);
-            return _users.Remove(user);
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var insertUserCommand = connection.CreateCommand();
+                insertUserCommand.CommandText = $@"Update Users (isPrisoner)
+                                            Output inserted.*
+                                            Values(@isPrisoner)";
+
+                insertUserCommand.Parameters.AddWithValue("isPrisoner", IsPrisoner);
+
+                int rows = insertUserCommand.ExecuteNonQuery();
+            }
+
+            throw new Exception("No user found");
+        }
+
+        public User DeleteUser(string username, string password, DateTime releaseDate, int age, bool isPrisoner)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var insertUserCommand = connection.CreateCommand();
+                insertUserCommand.CommandText = $@"DELETE from Users (username,password, releaseDate, age, isPrisoner)
+                                            Output inserted.*
+                                            Values(@username,@password,@releaseDate,@age,@isPrisoner)";
+
+                insertUserCommand.Parameters.AddWithValue("username", username);
+                insertUserCommand.Parameters.AddWithValue("password", password);
+                insertUserCommand.Parameters.AddWithValue("releaseDate", releaseDate);
+                insertUserCommand.Parameters.AddWithValue("age", age);
+                insertUserCommand.Parameters.AddWithValue("isPrisoner", isPrisoner);
+
+                var reader = insertUserCommand.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    var insertedPassword = reader["password"].ToString();
+                    var insertedUsername = reader["username"].ToString();
+                    var insertedReleaseDate = (DateTime)reader["releaseDate"];
+                    var insertedAge = (int)reader["age"];
+                    var insertedId = reader["Id"].ToString();
+                    var insertedIsPrisoner = (bool)reader["isPrisoner"];
+
+                    var deletedUser = new User(insertedUsername, insertedPassword, insertedReleaseDate, insertedAge, insertedIsPrisoner) { Id = insertedId };
+
+                    return deletedUser;
+                }
+            }
+
+            throw new Exception("No user found");
         }
     }
 }
