@@ -11,17 +11,18 @@ namespace ClinkedIn.Data
     {
         const string ConnectionString = "Server = localhost; Database = ClinkedIn; Trusted_Connection = True;";
 
-        public Services AddService(string name, string description, decimal price)
+        public Services AddService(int id, string name, string description, decimal price)
         {
 
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 var insertUserCommand = connection.CreateCommand();
-                insertUserCommand.CommandText = $@"Insert into Services (name,description,price)
+                insertUserCommand.CommandText = $@"Insert into Services (id, name,description,price)
                                             Output inserted.*
-                                            Values(@name,@description,@price)";
+                                            Values(@id,@name,@description,@price)";
 
+                insertUserCommand.Parameters.AddWithValue("id", id);
                 insertUserCommand.Parameters.AddWithValue("name", name);
                 insertUserCommand.Parameters.AddWithValue("description", description);
                 insertUserCommand.Parameters.AddWithValue("price", price);
@@ -30,12 +31,12 @@ namespace ClinkedIn.Data
 
                 if (reader.Read())
                 {
-                    var newService = new Services(name, description, price)
+                    var newService = new Services(id, name, description, price)
                     {
+                        Id = (int)reader["id"],
                         Name = reader["name"].ToString(),
                         Description = reader["description"].ToString(),
                         Price = (decimal)reader["price"],
-                        Id = reader["Id"].ToString()
                     };
 
                     return newService;
@@ -58,11 +59,11 @@ namespace ClinkedIn.Data
                                                              // ExecuteScalar for top left value - 1 column / 1 row
             while (reader.Read())
             {
-                var id = reader["Id"].ToString(); //(int) is there to turn it into an int
+                var id = (int)reader["Id"]; //(int) is there to turn it into an int
                 var name = reader["name"].ToString();
                 var description = reader["description"].ToString();
                 var price = (decimal)reader["price"];
-                var newService = new Services(name, description, price);
+                var newService = new Services(id, name, description, price);
 
                 services.Add(newService);
             }
