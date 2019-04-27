@@ -59,18 +59,17 @@ namespace ClinkedIn.Controllers
         }
 
         // Delete User
-        [HttpDelete("{id}/delete")]
-        public ActionResult DeleteUser(string id)
+        [HttpDelete("{id}")]
+        public ActionResult DeleteUser(int Id)
         {
-            var wasUserDeleted = _userRepository.DeleteUser(id);
-            if (wasUserDeleted)
-            {
-                return Ok($"The user was deleted.");
-            }
-            else
-            {
-                return BadRequest(new { error = "The user you entered does not exist." });
-            }
+            return Ok(_userRepository.DeleteUser(Id));
+        }
+
+        // Update User
+        [HttpPut("{id}")]
+        public ActionResult UpdateIsPrisoner(bool IsPrisoner, int Id)
+        {
+            return Ok(_userRepository.UpdateUser(IsPrisoner, Id));
         }
 
         // -------------------------------- Friends --------------------------------
@@ -216,37 +215,37 @@ namespace ClinkedIn.Controllers
 
         // -------------------------------- Services --------------------------------
 
-        [HttpGet("{id}/service")]
-        public ActionResult ListService(string id)
-        {
-            var userServiceList = _userRepository.GetSingleUser(id).Services;
-            return Ok(userServiceList);
-        }
+        //[HttpGet("{id}/service")]
+        //public ActionResult ListService(string id)
+        //{
+        //    var userServiceList = _userRepository.GetSingleUser(id).Services;
+        //    return Ok(userServiceList);
+        //}
 
-        [HttpPut("{id}/service/add")]
-        public ActionResult AddService(string id, string service)
-        {
-            var userServiceList = _userRepository.GetSingleUser(id).Services;
+        //[HttpPut("{id}/service/add")]
+        //public ActionResult AddService(string id, string service)
+        //{
+        //    var userServiceList = _userRepository.GetSingleUser(id).Services;
 
-            if(!userServiceList.Contains(service))
-            {
-                userServiceList.Add(service);
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("You can't add the same service twice...");
-            }
-        }
+        //    if(!userServiceList.Contains(service))
+        //    {
+        //        userServiceList.Add(service);
+        //        return Ok();
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("You can't add the same service twice...");
+        //    }
+        //}
 
-        [HttpPut("{id}/service/remove")]
-        public ActionResult RemoveService(string id, string service)
-        {
-            var userServicesList = _userRepository.GetSingleUser(id).Services;
+        //[HttpPut("{id}/service/remove")]
+        //public ActionResult RemoveService(string id, string service)
+        //{
+        //    var userServicesList = _userRepository.GetSingleUser(id).Services;
 
-            userServicesList.Remove(service);
-            return Ok();
-        }
+        //    userServicesList.Remove(service);
+        //    return Ok();
+        //}
 
         // -------------------------------- Enemies --------------------------------
 

@@ -147,10 +147,54 @@ namespace ClinkedIn.Data
             throw new Exception("No user found");
         }
 
-        public bool DeleteUser(string userId)
+        public User UpdateUser(bool IsPrisoner, int Id)
         {
-            var user = _users.FirstOrDefault(singleUser => singleUser.Id == userId);
-            return _users.Remove(user);
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var insertUserCommand = connection.CreateCommand();
+                insertUserCommand.CommandText = $@"Update Users (isPrisoner)
+                                            Output inserted.*
+                                            Values(@isPrisoner)";
+
+                insertUserCommand.Parameters.AddWithValue("isPrisoner", IsPrisoner);
+
+                int rows = insertUserCommand.ExecuteNonQuery();
+            }
+
+            throw new Exception("No user found");
+        }
+
+        public User DeleteUser(int Id)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var deleteUserCommand = connection.CreateCommand();
+                deleteUserCommand.CommandText = $@"DELETE from Users
+                                            Output deleted.*
+                                            Where Id=@Id";
+
+                deleteUserCommand.Parameters.AddWithValue("Id", Id);
+
+                var reader = deleteUserCommand.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    var username = reader["username"].ToString();
+                    var password = reader["password"].ToString();
+                    var releaseDate = (DateTime)reader["releaseDate"];
+                    var age = (int)reader["age"];
+                    var id = reader["Id"].ToString();
+                    var isPrisoner = (bool)reader["isPrisoner"];
+
+                    var deletedUser = new User(username, password, releaseDate, age, isPrisoner) { Id = id };
+
+                    return deletedUser;
+                }
+            }
+
+            throw new Exception("No user found");
         }
     }
 }
