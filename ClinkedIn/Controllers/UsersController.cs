@@ -38,13 +38,6 @@ namespace ClinkedIn.Controllers
             return Ok(_userRepository.GetSingleUser(id));
         }
 
-        // Get Update IsPrisoner User
-        [HttpPut("{id}")]
-        public ActionResult UpdateIsPrisoner(string id)
-        {
-            return Ok(_userRepository.UpdateIsPrisoner(id));
-        }
-
         // Add User
         [HttpPost("register")]
         public ActionResult AddUser(CreateUserRequest createRequest)
@@ -65,11 +58,11 @@ namespace ClinkedIn.Controllers
             return Ok(_userRepository.DeleteUser(Id));
         }
 
-        // Update User
+        // Get Update User IsPrisoner
         [HttpPut("{id}")]
-        public ActionResult UpdateIsPrisoner(bool IsPrisoner, int Id)
-        {
-            return Ok(_userRepository.UpdateUser(IsPrisoner, Id));
+        public ActionResult UpdateIsPrisoner(string id)
+        {            
+            return Ok(_userRepository.UpdateIsPrisoner(id));
         }
 
         // -------------------------------- Friends --------------------------------
