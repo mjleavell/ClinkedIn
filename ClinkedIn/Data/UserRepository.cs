@@ -131,34 +131,30 @@ namespace ClinkedIn.Data
             throw new Exception("No user found");
         }
 
-        public User DeleteUser(string username, string password, DateTime releaseDate, int age, bool isPrisoner)
+        public User DeleteUser(int Id)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                var insertUserCommand = connection.CreateCommand();
-                insertUserCommand.CommandText = $@"DELETE from Users (username,password, releaseDate, age, isPrisoner)
-                                            Output inserted.*
-                                            Values(@username,@password,@releaseDate,@age,@isPrisoner)";
+                var deleteUserCommand = connection.CreateCommand();
+                deleteUserCommand.CommandText = $@"DELETE from Users
+                                            Output deleted.*
+                                            Where Id=@Id";
 
-                insertUserCommand.Parameters.AddWithValue("username", username);
-                insertUserCommand.Parameters.AddWithValue("password", password);
-                insertUserCommand.Parameters.AddWithValue("releaseDate", releaseDate);
-                insertUserCommand.Parameters.AddWithValue("age", age);
-                insertUserCommand.Parameters.AddWithValue("isPrisoner", isPrisoner);
+                deleteUserCommand.Parameters.AddWithValue("Id", Id);
 
-                var reader = insertUserCommand.ExecuteReader();
+                var reader = deleteUserCommand.ExecuteReader();
 
                 if (reader.Read())
                 {
-                    var insertedPassword = reader["password"].ToString();
-                    var insertedUsername = reader["username"].ToString();
-                    var insertedReleaseDate = (DateTime)reader["releaseDate"];
-                    var insertedAge = (int)reader["age"];
-                    var insertedId = reader["Id"].ToString();
-                    var insertedIsPrisoner = (bool)reader["isPrisoner"];
+                    var username = reader["username"].ToString();
+                    var password = reader["password"].ToString();
+                    var releaseDate = (DateTime)reader["releaseDate"];
+                    var age = (int)reader["age"];
+                    var id = reader["Id"].ToString();
+                    var isPrisoner = (bool)reader["isPrisoner"];
 
-                    var deletedUser = new User(insertedUsername, insertedPassword, insertedReleaseDate, insertedAge, insertedIsPrisoner) { Id = insertedId };
+                    var deletedUser = new User(username, password, releaseDate, age, isPrisoner) { Id = id };
 
                     return deletedUser;
                 }

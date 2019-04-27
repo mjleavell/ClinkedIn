@@ -7,17 +7,17 @@ namespace ClinkedIn.Models
 {
     public class Services
     {
-        public Services(string username, string service, decimal price)
+        public Services(string name, string description, decimal price)
         {
             Id = Guid.NewGuid().ToString();
-            Username = username;
-            Service = service;
+            Name = name;
+            Description = description;
             Price = price;
         }
 
         public string Id { get; set; }
-        public string Username { get; }
-        public string Service { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public decimal Price { get; set; }
     }
 }

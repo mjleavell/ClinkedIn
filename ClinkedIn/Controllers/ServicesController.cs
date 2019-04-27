@@ -25,17 +25,17 @@ namespace ClinkedIn.Controllers
             _servicesRepository = new ServiceRepository();
         }
 
-        //[HttpGet("{id}/service")]
-        //public ActionResult ListService(string username, string service)
-        //{
-        //    var serviceList = _servicesRepository.AddService(username, service);
-        //    return Ok(serviceList);
-        //}
+        [HttpGet("{id}/service")]
+        public ActionResult <List<Services>> GetAllServices()
+        {
+            var serviceList = _servicesRepository.GetAllServices();
+            return Ok(serviceList);
+        }
 
         [HttpPost("{id}/service/add")]
         public ActionResult ListService(CreateServiceRequest createRequest)
         {
-            var serviceList = _servicesRepository.AddService(createRequest.Username, createRequest.Service, createRequest.Price);
+            var serviceList = _servicesRepository.AddService(createRequest.Name, createRequest.Description, createRequest.Price);
             return Ok(serviceList);
         }
 

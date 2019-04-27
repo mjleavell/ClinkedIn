@@ -51,12 +51,12 @@ namespace ClinkedIn.Controllers
             return Created($"api/users/{newUser.Id}", newUser);
         }
 
-        //// Delete User
-        //[HttpDelete("{id}/delete")]
-        //public ActionResult DeleteUser(string username, string password, int age, bool isPrisoner)
-        //{
-        //    return Ok(_userRepository.DeleteUser(username, password, age, isPrisoner));
-        //}
+        // Delete User
+        [HttpDelete("{id}")]
+        public ActionResult DeleteUser(int Id)
+        {
+            return Ok(_userRepository.DeleteUser(Id));
+        }
 
         // Update User
         [HttpPut("{id}")]

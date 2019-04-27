@@ -7,8 +7,8 @@ namespace ClinkedIn.Models
 {
     public class CreateServiceRequest
     {
-            public string Username { get; set; }
-            public string Service { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
             public decimal Price { get; set; }
     }
 }

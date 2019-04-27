@@ -11,31 +11,32 @@ namespace ClinkedIn.Data
     {
         const string ConnectionString = "Server = localhost; Database = ClinkedIn; Trusted_Connection = True;";
 
-        public Services AddService(string username, string service, decimal price)
+        public Services AddService(string name, string description, decimal price)
         {
 
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 var insertUserCommand = connection.CreateCommand();
-                insertUserCommand.CommandText = $@"Insert into Services (username,service, price)
+                insertUserCommand.CommandText = $@"Insert into Services (name,description,price)
                                             Output inserted.*
-                                            Values(@username,@service,@price)";
+                                            Values(@name,@description,@price)";
 
-                insertUserCommand.Parameters.AddWithValue("username", username);
-                insertUserCommand.Parameters.AddWithValue("service", service);
+                insertUserCommand.Parameters.AddWithValue("name", name);
+                insertUserCommand.Parameters.AddWithValue("description", description);
                 insertUserCommand.Parameters.AddWithValue("price", price);
 
                 var reader = insertUserCommand.ExecuteReader();
 
                 if (reader.Read())
                 {
-                    var insertedUsername = reader["username"].ToString();
-                    var insertedService = reader["service"].ToString();
-                    var insertedPrice = (decimal)reader["price"];
-                    var insertedId = reader["Id"].ToString();
-
-                    var newService = new Services(insertedUsername, insertedService, insertedPrice) { Id = insertedId };
+                    var newService = new Services(name, description, price)
+                    {
+                        Name = reader["name"].ToString(),
+                        Description = reader["description"].ToString(),
+                        Price = (decimal)reader["price"],
+                        Id = reader["Id"].ToString()
+                    };
 
                     return newService;
                 }
@@ -58,10 +59,10 @@ namespace ClinkedIn.Data
             while (reader.Read())
             {
                 var id = reader["Id"].ToString(); //(int) is there to turn it into an int
-                var username = reader["username"].ToString();
-                var service = reader["service"].ToString();
+                var name = reader["name"].ToString();
+                var description = reader["description"].ToString();
                 var price = (decimal)reader["price"];
-                var newService = new Services(username, service, price);
+                var newService = new Services(name, description, price);
 
                 services.Add(newService);
             }
