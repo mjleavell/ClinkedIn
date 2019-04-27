@@ -38,15 +38,5 @@ namespace ClinkedIn.Controllers
             var serviceList = _servicesRepository.AddService(createRequest.Name, createRequest.Description, createRequest.Price);
             return Ok(serviceList);
         }
-
-
-        //[HttpPut("{id}/service/remove")]
-        //public ActionResult RemoveService(string id, string service)
-        //{
-        //    var userServicesList = _userRepository.GetSingleUser(id).Services;
-
-        //    userServicesList.Remove(service);
-        //    return Ok();
-        //}
     }
 }
