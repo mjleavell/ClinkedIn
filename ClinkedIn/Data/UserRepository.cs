@@ -108,12 +108,6 @@ namespace ClinkedIn.Data
             return users;
         }
 
-        //public bool UpdateUser(string id)
-        //{
-
-        //}
-
-
         public User GetSingleUser(string userId)
         {
             using (var connection = new SqlConnection(ConnectionString))
@@ -147,19 +141,33 @@ namespace ClinkedIn.Data
             throw new Exception("No user found");
         }
 
-        public User UpdateUser(bool IsPrisoner, int Id)
+        public bool UpdateIsPrisoner(string id)
         {
+            var user = GetSingleUser(id);
+            var isPrisoner= user.IsPrisoner;
+
+            // if isPrisoner is true
+            if (isPrisoner)
+            {
+                isPrisoner = false;
+            }
+            else
+            {
+                isPrisoner = true;
+            }
+
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                var insertUserCommand = connection.CreateCommand();
-                insertUserCommand.CommandText = $@"Update Users (isPrisoner)
-                                            Output inserted.*
-                                            Values(@isPrisoner)";
+                var updateUserCommand = connection.CreateCommand();
+                updateUserCommand.CommandText = $@"Update Users
+                                                Set IsPrisoner = @isPrisoner
+                                                where id = @id";
 
-                insertUserCommand.Parameters.AddWithValue("isPrisoner", IsPrisoner);
-
-                int rows = insertUserCommand.ExecuteNonQuery();
+                updateUserCommand.Parameters.AddWithValue("@id", id);
+                updateUserCommand.Parameters.AddWithValue("@isPrisoner", isPrisoner);
+                var reader = updateUserCommand.ExecuteReader();
+                return isPrisoner;
             }
 
             throw new Exception("No user found");

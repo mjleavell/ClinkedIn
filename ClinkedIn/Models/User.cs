@@ -16,7 +16,7 @@ namespace ClinkedIn.Models
             Friends = new List<User>();
             Enemies = new List<User>();
             IsWarden = false;
-            IsPrisoner = true;
+            IsPrisoner = isPrisoner;
             Age = age;
         }
 
