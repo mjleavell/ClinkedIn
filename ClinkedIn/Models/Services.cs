@@ -7,13 +7,19 @@ namespace ClinkedIn.Models
 {
     public class Services
     {
-        public Services(string username, string service)
+        public Services() { }
+
+        public Services(int id, string name, string description, decimal price)
         {
-            Username = username;
-            Service = service;
+            Id = id;
+            Name = name;
+            Description = description;
+            Price = price;
         }
 
-        public string Username { get; }
-        public string Service { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
     }
 }
