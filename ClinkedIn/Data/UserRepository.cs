@@ -11,6 +11,7 @@ namespace ClinkedIn.Data
     {
         const string ConnectionString = "Server = localhost; Database = ClinkedIn; Trusted_Connection = True;";
 
+        //static List<User> _users;
         static List<User> _users = new List<User>
         {
             //new user("wayneworld","3425dsfsa", new datetime(2020, 1, 31)){ id = "094b3963-e404-49fa-923f-37dd3ce610b7" },
@@ -87,11 +88,11 @@ namespace ClinkedIn.Data
             var getAllUsersCommand = connection.CreateCommand(); 
             getAllUsersCommand.CommandText = "select * from users";
 
-            var reader = getAllUsersCommand.ExecuteReader(); // Excecute the reader! // if you don't care about the result and just want to know how many things were affected, use the ExecuteNonQuery
-                                                             // ExecuteScalar for top left value - 1 column / 1 row
+            var reader = getAllUsersCommand.ExecuteReader(); 
+
             while (reader.Read())
             {
-                var id = reader["Id"].ToString(); //(int) is there to turn it into an int
+                var id = reader["Id"].ToString(); 
                 var username = reader["username"].ToString();
                 var password = reader["password"].ToString();
                 var releaseDate = (DateTime)reader["releaseDate"];
@@ -102,15 +103,48 @@ namespace ClinkedIn.Data
                 users.Add(user);
             }
 
-            connection.Close(); // Close it down!
+            connection.Close();
 
             return users;
         }
 
+        //public bool UpdateUser(string id)
+        //{
+
+        //}
+
+
         public User GetSingleUser(string userId)
         {
-            var singleUser = _users.FirstOrDefault(user => user.Id == userId);
-            return singleUser;
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                var getSingleUserCommand = connection.CreateCommand();
+                getSingleUserCommand.CommandText = @"SELECT *
+                                                    FROM users u
+                                                    WHERE u.id = @userId";
+
+                getSingleUserCommand.Parameters.AddWithValue("@userId", userId);
+                var reader = getSingleUserCommand.ExecuteReader();
+
+                // if no users were returned, an error is thrown.
+                if (!reader.Read())
+                {
+                    throw new InvalidOperationException("No user were returned.");
+                }
+
+                var singleUserId = reader["id"].ToString();
+                var singleUserUsername = reader["username"].ToString();
+                var singleUserPassword = reader["password"].ToString();
+                var singleUserReleaseDate = (DateTime)reader["releaseDate"];
+                var singleUserAge = (int)reader["age"];
+                var singleUserIsPrisoner = (bool)reader["isPrisoner"];
+
+                var singleUser = new User(singleUserUsername, singleUserPassword, singleUserReleaseDate, singleUserAge, singleUserIsPrisoner) { Id = singleUserId };
+                return singleUser;
+            }
+            throw new Exception("No user found");
         }
 
         public User UpdateUser(bool IsPrisoner, int Id)
