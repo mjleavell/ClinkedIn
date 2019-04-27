@@ -11,18 +11,17 @@ namespace ClinkedIn.Data
     {
         const string ConnectionString = "Server = localhost; Database = ClinkedIn; Trusted_Connection = True;";
 
-        public Services AddService(int id, string name, string description, decimal price)
+        public Services AddService(string name, string description, decimal price)
         {
 
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 var insertUserCommand = connection.CreateCommand();
-                insertUserCommand.CommandText = $@"Insert into Services (id, name,description,price)
+                insertUserCommand.CommandText = $@"Insert into Services (name,description,price)
                                             Output inserted.*
-                                            Values(@id,@name,@description,@price)";
+                                            Values(@name,@description,@price)";
 
-                insertUserCommand.Parameters.AddWithValue("id", id);
                 insertUserCommand.Parameters.AddWithValue("name", name);
                 insertUserCommand.Parameters.AddWithValue("description", description);
                 insertUserCommand.Parameters.AddWithValue("price", price);
@@ -31,7 +30,7 @@ namespace ClinkedIn.Data
 
                 if (reader.Read())
                 {
-                    var newService = new Services(id, name, description, price)
+                    var newService = new Services()
                     {
                         Id = (int)reader["id"],
                         Name = reader["name"].ToString(),

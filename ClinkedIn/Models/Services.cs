@@ -7,6 +7,8 @@ namespace ClinkedIn.Models
 {
     public class Services
     {
+        public Services() { }
+
         public Services(int id, string name, string description, decimal price)
         {
             Id = id;
