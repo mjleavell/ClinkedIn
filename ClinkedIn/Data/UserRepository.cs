@@ -108,10 +108,24 @@ namespace ClinkedIn.Data
             return users;
         }
 
-        //public bool UpdateUser(string id)
-        //{
+        public bool UpdateIsPrisoner(string id)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var updateUserCommand = connection.CreateCommand();
+                updateUserCommand.CommandText = $@"Update Users
+                                                   Set isPrisoner = '@isPrisoner'
+                                                   where id = @id";
 
-        //}
+                updateUserCommand.Parameters.AddWithValue("@id", id);
+                updateUserCommand.Parameters.AddWithValue("@isPrisoner", id);
+                var reader = updateUserCommand.ExecuteReader();
+                return true;
+            }
+
+            throw new Exception("The status of the user was not updated.");
+        }
 
 
         public User GetSingleUser(string userId)
