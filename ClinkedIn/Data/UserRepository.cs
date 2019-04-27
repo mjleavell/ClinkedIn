@@ -130,29 +130,35 @@ namespace ClinkedIn.Data
 
         public User GetSingleUser(string userId)
         {
-            var singleUser = _users.Find(user => user.Id == userId);
-            //var connection = new SqlConnection(ConnectionString);
-            //connection.Open();
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
 
-            //var getSingleUserCommand = connection.CreateCommand();
-            //getSingleUserCommand.CommandText = "SELECT * from users WHERE id = @userId ";
+                var getSingleUserCommand = connection.CreateCommand();
+                getSingleUserCommand.CommandText = @"SELECT *
+                                                    FROM users u
+                                                    WHERE u.id = @userId";
 
-            //var reader = getSingleUserCommand.ExecuteReader();
+                getSingleUserCommand.Parameters.AddWithValue("@userId", userId);
+                var reader = getSingleUserCommand.ExecuteReader();
 
-            //while (reader.Read())
-            //{
-            //    var id = reader["Id"].ToString();
-            //    var username = reader["username"].ToString();
-            //    var password = reader["password"].ToString();
-            //    var releaseDate = (DateTime)reader["releaseDate"];
-            //    var age = (int)reader["age"];
-            //    var isPrisoner = (bool)reader["isPrisoner"];
-            //    var user = new User(username, password, releaseDate, age, isPrisoner) { Id = id };
-            //}
+                // if no users were returned, an error is thrown.
+                if (!reader.Read())
+                {
+                    throw new InvalidOperationException("No records were returned.");
+                }
 
-            //connection.Close();
+                var singleUserId = reader["id"].ToString();
+                var singleUserUsername = reader["username"].ToString();
+                var singleUserPassword = reader["password"].ToString();
+                var singleUserReleaseDate = (DateTime)reader["releaseDate"];
+                var singleUserAge = (int)reader["age"];
+                var singleUserIsPrisoner = (bool)reader["isPrisoner"];
 
-            return singleUser;
+                var singleUser = new User(singleUserUsername, singleUserPassword, singleUserReleaseDate, singleUserAge, singleUserIsPrisoner) { Id = singleUserId };
+                return singleUser;
+            }
+            throw new Exception("No user found");
         }
 
         public bool DeleteUser(string userId)
